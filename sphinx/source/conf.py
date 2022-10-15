@@ -14,6 +14,8 @@
 #
 # import os
 # import sys
+import kotti_docs_theme
+
 # sys.path.insert(0, os.path.abspath('.'))
 
 
@@ -58,7 +60,7 @@ master_doc = 'index'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = 'english'
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -74,7 +76,6 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-import kotti_docs_theme
 html_theme = 'kotti_docs_theme'
 html_theme_path = [kotti_docs_theme.get_theme_dir()]
 

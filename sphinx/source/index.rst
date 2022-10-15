@@ -3,15 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to vdw_evolve's documentation!
-======================================
+Welcome to the VdW Evolve documentation page!
+=============================================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
    
    theory
-   ...
 
 
 Indices and tables
