@@ -10,8 +10,7 @@ Welcome to vdw_evolve's documentation!
    :maxdepth: 2
    :caption: Contents:
    
-   usage/installation
-   usage/quickstart
+   theory
    ...
 
 
