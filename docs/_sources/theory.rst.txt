@@ -18,7 +18,7 @@ Let us define a unit cell by the following vectors
 
 .. math::
    
-   (a + b)^2 = a^2 + 2ab + b^2
+   (a + b)^2 = \mathbf{g}^2 + 2ab + b^2
    
    (a - b)^2 = a^2 - 2ab + b^2
 
