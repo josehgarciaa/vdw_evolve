@@ -27,7 +27,7 @@ which can also be collected into a matrix
 .. math::
    
    A = \left( \begin{array}{cc}
-               \mathbf{a}_1\cdot\mathbf{a}_2 & \mathbf{a}_1\cdot\mathbf{a}_2 \\ 
+               \mathbf{a}_1\cdot\mathbf{a}_1 & \mathbf{a}_1\cdot\mathbf{a}_2 \\ 
                \mathbf{a}_2\cdot\mathbf{a}_1 & \mathbf{a}_2\cdot\mathbf{a}_2 
          \end{}array} \right)
    
