@@ -88,14 +88,17 @@ it will continue to describe the lattice. The smallest unit cell is known as pri
 \[ \begin{align}\begin{aligned}\mathbf{a}_1 = (a_{1x},a_{1y})\\\mathbf{a}_2 = (a_{2x},a_{2y})\end{aligned}\end{align} \]</div>
 <p>which can also be collected into a matrix</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}A = \left( \begin{array}{cc} a_{1x} &amp; a_{2x} \\ a_{1y} &amp; a_{2y}\end{array} \right)\end{split}\]</div>
+\[\begin{split}A = \left( \begin{array}{cc}
+            \mathbf{a}_1\cdot\mathbf{a}_2 &amp; \mathbf{a}_1\cdot\mathbf{a}_2 \\
+            \mathbf{a}_2\cdot\mathbf{a}_1 &amp; \mathbf{a}_2\cdot\mathbf{a}_2
+      \end{}array} \right)\end{split}\]</div>
+<p>alternativeyl, the cell can be defined as an geometric invariant through the following matrix</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\tilde{A} = \left( \begin{array}{cc} a_{1x} &amp; a_{2x} \\ a_{1y} &amp; a_{2y}\end{array} \right)\end{split}\]</div>
 <p>Moreover, in several cases, even the smallest unit cell is not unique. This is because, it can be tipically
 rotated or inverted. A possible solution to this issue to define a unique cell was given by Niggli, and hence
 the name Niggli cell.</p>
 <p>In two dimensionls, a niggli cell satisfies the following conditions:</p>
-<ul class="simple">
-<li><p>Since Pythagoras, we know that <span class="math notranslate nohighlight">\(a^2 + b^2 = c^2\)</span>.</p></li>
-</ul>
 </section>
 </section>
 

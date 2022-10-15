@@ -26,8 +26,19 @@ which can also be collected into a matrix
 
 .. math::
    
-   A = \left( \begin{array}{cc} a_{1x} & a_{2x} \\ a_{1y} & a_{2y}\end{array} \right)
+   A = \left( \begin{array}{cc}
+               \mathbf{a}_1\cdot\mathbf{a}_2 & \mathbf{a}_1\cdot\mathbf{a}_2 \\ 
+               \mathbf{a}_2\cdot\mathbf{a}_1 & \mathbf{a}_2\cdot\mathbf{a}_2 
+         \end{}array} \right)
    
+
+alternativeyl, the cell can be defined as an geometric invariant through the following matrix
+
+.. math::
+   
+   \tilde{A} = \left( \begin{array}{cc} a_{1x} & a_{2x} \\ a_{1y} & a_{2y}\end{array} \right)
+
+
 
 Moreover, in several cases, even the smallest unit cell is not unique. This is because, it can be tipically 
 rotated or inverted. A possible solution to this issue to define a unique cell was given by Niggli, and hence 
@@ -35,4 +46,3 @@ the name Niggli cell.
 
 In two dimensionls, a niggli cell satisfies the following conditions:
  
-- Since Pythagoras, we know that :math:`a^2 + b^2 = c^2`.
