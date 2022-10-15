@@ -15,12 +15,12 @@ However, a unit cell is not unique. Obviously, if such a cell is scaled by a int
 it will continue to describe the lattice. The smallest unit cell is known as primitive cell. 
 
 Let us define a unit cell by the following vectors
+
 .. math::
-
-   (a + b)^2 = \mathbf{g}^2 + 2ab + b^2
-
+   
+   (a + b)^2 = a^2 + 2ab + b^2
+   
    (a - b)^2 = a^2 - 2ab + b^2
-   :label: euler
 
 Moreover, in several cases, even the smallest unit cell is not unique. This is because, it can be tipically 
 rotated or inverted. A possible solution to this issue to define a unique cell was given by Niggli, and hence 
