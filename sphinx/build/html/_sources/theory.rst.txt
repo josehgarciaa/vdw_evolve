@@ -18,9 +18,16 @@ Let us define a unit cell by the following vectors
 
 .. math::
    
-   (a + b)^2 = \mathbf{g}^2 + 2ab + b^2 + d
+   \mathbf{a}_1 = (a_{1x},a_{1y})
    
-   (a - b)^2 = a^2 - 2ab + b^2
+   \mathbf{a}_2 = (a_{2x},a_{2y})
+
+which can also be collected into a matrix
+
+.. math::
+   
+   A = \left( \begin{array}{cc} a_{1x} & a_{2x} \\ a_{1y} & a_{2y}\end{array} \right)
+   
 
 Moreover, in several cases, even the smallest unit cell is not unique. This is because, it can be tipically 
 rotated or inverted. A possible solution to this issue to define a unique cell was given by Niggli, and hence 
