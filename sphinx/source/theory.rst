@@ -29,7 +29,7 @@ which can also be collected into a matrix
    A = \left( \begin{array}{cc}
                \mathbf{a}_1\cdot\mathbf{a}_1 & \mathbf{a}_1\cdot\mathbf{a}_2 \\ 
                \mathbf{a}_2\cdot\mathbf{a}_1 & \mathbf{a}_2\cdot\mathbf{a}_2 
-         \end{}array} \right)
+         \end{array} \right)
    
 
 alternativeyl, the cell can be defined as an geometric invariant through the following matrix
