@@ -213,10 +213,10 @@ class Gen1:
 
         new_generation = self.actual_generation
 
+        if history:
+            evolution_history = {}
         for e in range(nr_epochs):
             print("Epochs {}/{}".format(e, nr_epochs))
-            if history:
-                evolution_history = {}
 
             # mutate
             gen_0 = self.actual_generation
