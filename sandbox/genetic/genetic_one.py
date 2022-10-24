@@ -176,7 +176,7 @@ class Gen1:
 
         new_generation = []
         for i, parent in enumerate(parents):
-            for j in range(i + 1, len(parents)):
+            for j in range(i , len(parents)):
                 parent_1 = parent
                 parent_2 = parents[j]
                 new_generation.append(self.mating(parent_1, parent_2))
