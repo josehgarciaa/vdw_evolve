@@ -20,7 +20,7 @@ where :math:`{\mathbf{a}_1}` and :math:`{\mathbf{a}_2}` two noncollinear two-dim
 below:
 
 .. image:: images/example0_honeycomb_lattice.svg
-   :width: 600
+   :width: 300
 
 Unit cell
 *********
@@ -52,7 +52,7 @@ Let us consider know, another lattice B, represent by the unit cell matrix
 for instance, this could be a lattice with a different symmetry such a the square Lattice.
 
 .. image:: images/example0_square_lattice.png
-   :width: 600
+   :width: 300
 
 If we stack these two lattices together, a new lattice may form, but its not guarantee since the lattice can be incomesurate, meaning that
 the ratio of their periods along any given direction in space is not an integer and therefore the entire collection of points won't repite periodically. 
@@ -76,7 +76,7 @@ just discrete linear transformations. Its clear that if :math:`A` describe the p
 linear combination of the lattice vectors :math:`T_A A` will describe another allowed unit cell. 
 The role of equation :eq:`super_cell_eq` is two transform the two initial unit cell represents into a new common cell.  
 
-The problem:
+The problem
 ************
 
 For two arbitrary sets lattice vector sets :math:`A` and :math:`B`, find the set of 8 integers :math:`I:=(i_A,i_A,j_A,J_B,k_B,k_B,l_A,l_B)`  
