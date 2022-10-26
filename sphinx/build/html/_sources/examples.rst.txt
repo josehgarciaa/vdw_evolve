@@ -30,7 +30,7 @@ For convenience, let us group the lattice vectors as columns in a :math:`2\times
 .. math::
    A = \left( \begin{array}{cc}
                \mathbf{a}_{1,1} & \mathbf{a}_{2,1} \\
-               \mathbf{a}_{1,2} & \mathbf{a}_{2,1}
+               \mathbf{a}_{1,2} & \mathbf{a}_{2,2}
       \end{array} \right).
 
 The determinant of matrix :math:`A` describes the area of the plane formed by the lattice vectors, and within this area there is a collection of points. 
@@ -46,7 +46,7 @@ Let us consider know, another lattice B, represent by the unit cell matrix
 .. math::
    B = \left( \begin{array}{cc}
                \mathbf{b}_{1,1} & \mathbf{b}_{2,1} \\
-               \mathbf{b}_{1,2} & \mathbf{b}_{2,1}
+               \mathbf{b}_{1,2} & \mathbf{b}_{2,2}
       \end{array} \right).
 
 for instance, this could be a lattice with a different symmetry such a the square Lattice.
@@ -103,7 +103,7 @@ are defined as the solution of the following equation
 .. math:: 
    B = \left( \begin{array}{cc}
                \mathbf{b}_{1,1} & \mathbf{b}_{2,1} \\
-               \mathbf{b}_{1,2} & \mathbf{b}_{2,1}
+               \mathbf{b}_{1,2} & \mathbf{b}_{2,2}
       \end{array} \right) A = 2\pi \left( \begin{array}{cc}
                1 & 0 \\
                0 & 1
