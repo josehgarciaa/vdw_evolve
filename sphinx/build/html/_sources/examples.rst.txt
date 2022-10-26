@@ -123,9 +123,9 @@ complex conjugate
 An important quantity for many application is to find the set of :math:`k_F{\rm s}`  that satisfy the following constrain
 
 .. math:: 
-   {\rm eigvals}[ H(\textbf{k}_F) - - E_F \mathbb{I} ]= 0
+   {\rm eigvals}[ H(\textbf{k}_F) -  E_F \mathbb{I} ]= 0
 
-where :math:`E_F` the Fermi level of the system, where math:`\mathbb{I}` the identity matrix, 
+where :math:`E_F` the Fermi level of the system, where :math:`\mathbb{I}` the identity matrix, 
 eigval a function that compute the eigenvalues of the system and the set :math:`\{k_F\}` the so-called Fermi momentum. 
 
 The problem
