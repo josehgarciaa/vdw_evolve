@@ -95,6 +95,38 @@ that satisfy</p>
 </section>
 <section id="optimal-fermi-contour">
 <h2>Optimal Fermi Contour<a class="headerlink" href="#optimal-fermi-contour" title="Permalink to this heading">¶</a></h2>
+<p>Another interesting approach for the evolutionary strategy is to efficiently sample a Fermi Contour. The Brillouin zone is the momentum-space
+equilent of a bravai lattice, and its the collection of momentum that satisfies:</p>
+<div class="math notranslate nohighlight">
+\[k(n_1,n_2) = \frac{n_1}{N_1} \mathbf{b}_1 + \frac{n_2}{N_2} \mathbf{b}_2,\]</div>
+<p>where <span class="math notranslate nohighlight">\(N_1\)</span> and <span class="math notranslate nohighlight">\(N_2\)</span> the number of unit cells contained in your crystal , and the reciprocal lattice vector
+are defined as the solution of the following equation</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}B = \left( \begin{array}{cc}
+            \mathbf{b}_{1,1} &amp; \mathbf{b}_{2,1} \\
+            \mathbf{b}_{1,2} &amp; \mathbf{b}_{2,1}
+   \end{array} \right) A = 2\pi    B = \left( \begin{array}{cc}
+            1 &amp; 0 \\
+            0 &amp; 1
+   \end{array} \right).\end{split}\]</div>
+<p>Let us now consider that the Hamiltonian matrix in the momentum space is given by the following expression</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}H(\textbf{k}) = \left( \begin{array}{cc}
+            0             &amp; f(\textbf{k}) \\
+            f(\textbf{k})* &amp; 0
+   \end{array} \right),\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(f(k) = {\rm e}^{k\textbf{k}\cdot \textbf{a}_1}+ {\rm e}^{k\textbf{k}\cdot \textbf{a}_2}+ 1\)</span></p>
+<p>An important quantity for many application is to find the set of <span class="math notranslate nohighlight">\(k_F{\rm s}\)</span>  that satisfy the following constrain</p>
+<div class="math notranslate nohighlight">
+\[H(\textbf{k}_F) - E_F = 0\]</div>
+<p>where <span class="math notranslate nohighlight">\(E_F\)</span> the Fermi level of the system, and the set <span class="math notranslate nohighlight">\(\{k_F\}\)</span> the so-called Fermi momentum.</p>
+<section id="id1">
+<h3>The problem<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<p>For a given system size <span class="math notranslate nohighlight">\((N_1,N_2)\)</span> (typicall above 1000 ), look for the set of <span class="math notranslate nohighlight">\((n_1,n_2)\)</span> that satisfies:</p>
+<div class="math notranslate nohighlight">
+\[{\rm eigval}\left[ H((\textbf{k})(n_1,n_2)) - E_F \mathbb{I} ] =0\]</div>
+<p>where math:<cite>mathbb{I}</cite> the identity matrix, and eigval a function that compute the eigenvalues of the system</p>
+</section>
 </section>
 </section>
 
