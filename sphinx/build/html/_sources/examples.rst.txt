@@ -58,10 +58,10 @@ If we stack these two lattices together, a new lattice may form, but its not gua
 the ratio of their periods along any given direction in space is not an integer and therefore the entire collection of points won't repite periodically. 
 
 Let us work under the assumption the are commesurate. Therefore, there exist two transformation :math:`T_A` and :math:`T_B` that will generate the same set of points
-of the super cell :math:`R_sc`, i.e
+of the super cell :math:`R_{sc}`, i.e
 
 .. math::
-   R_sc = T_A A = T_B B,
+   R_{sc} = T_A A = T_B B,
 
 where 
 
