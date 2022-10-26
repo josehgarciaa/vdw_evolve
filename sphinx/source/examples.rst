@@ -16,7 +16,7 @@ this means that a lattices is the collections of points :math:`R(n_1,n_2)` that 
 .. math::
    R(n_1,n_2) = n_1 \mathbf{a}_1 + n_2 \mathbf{a}_2, 
 
-where :math:`\mathbf{a}_1}` and :math:`\mathbf{2}_1}` two noncollinear two-dimensional vectors known as the lattice vectors. An example of a lattice is presented
+where :math:`\mathbf{a}_1` and :math:`\mathbf{a}_2` two noncollinear two-dimensional vectors known as the lattice vectors. An example of a lattice is presented
 below:
 
 .. image:: images/example0_honeycomb_lattice.svg
@@ -25,12 +25,12 @@ below:
 Unit cell
 *********
 
-For convenience, let us group the lattice vectors as columns in a :math: `2\times2` matrix 
+For convenience, let us group the lattice vectors as columns in a :math:`2\times2` matrix 
 
 .. math::
    A = \left( \begin{array}{cc}
-               \mathbf{a}_1\cdot\mathbf{a}_1 & \mathbf{a}_1\cdot\mathbf{a}_2 \\
-               0                             & \mathbf{a}_2\cdot\mathbf{a}_2
+               \mathbf{a}_1|_1 & \mathbf{a}_2|_1 \\
+               \mathbf{a}_1|_2 & \mathbf{a}_2|_2
       \end{array} \right).
 
 The determinant of matrix :math:`A` describes the area of the plane formed by the lattice vectors, and within this area there is a collection of points. 
@@ -45,9 +45,9 @@ Let us consider know, another lattice B, represent by the unit cell matrix
 
 .. math::
    B = \left( \begin{array}{cc}
-               \mathbf{b}_1\cdot\mathbf{b}_1 & \mathbf{b}_1\cdot\mathbf{b}_2 \\
-               0                             & \mathbf{b}_2\cdot\mathbf{b}_2
-               \end{array} \right).
+               \mathbf{b}_1|_1 & \mathbf{b}_2|_1 \\
+               \mathbf{b}_1|_2 & \mathbf{b}_2|_2
+      \end{array} \right).
 
 for instance, this could be a lattice with a different symmetry such a square one
 
@@ -60,35 +60,3 @@ for instance, this could be a lattice with a different symmetry such a square on
 Optimal Fermi Contour
 _____________________
 
-
- such as the hexagonal lattice below.   
-
-.. image:: images/example0_honeycomb_lattice.svg
-   :width: 600
-
-A unit cell, is sub re  minimum representation of a lattice can be tattice, 
-
-
-
-Let us start by considering two set of vector sets described by the matrices
-
-.. math::
-      \tilde{A} = \left( \begin{array}{cc}
-                           \mathbf{a}_1\cdot\mathbf{a}_1 & \mathbf{a}_1\cdot\mathbf{a}_2 \\ 
-                           0                             & \mathbf{a}_2\cdot\mathbf{a}_2 
-               \end{array} \right),
-
- and B
-.. math::
-      \tilde{B} = \left( \begin{array}{cc}
-                           \mathbf{b}_1\cdot\mathbf{b}_1 & \mathbf{b}_1\cdot\mathbf{b}_2 \\ 
-                           0                             & \mathbf{b}_2\cdot\mathbf{b}_2 
-               \end{array} \right),
-
-where the columns represents a basis for a two-dimensional space. 
-
-
-
-
-Optimal Fermi Contour
-_____________________
