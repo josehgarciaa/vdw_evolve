@@ -92,7 +92,7 @@ Optimal Fermi Contour
 _____________________
 
 Another interesting approach for the evolutionary strategy is to efficiently sample a Fermi Contour. The Brillouin zone is the momentum-space 
-equilent of a bravai lattice, and its the collection of momentum that satisfies:
+equivalent of a Bravais lattice, where the allowed momentums satisfies:
 
 .. math::
    k(n_1,n_2) = \frac{n_1}{N_1} \mathbf{b}_1 + \frac{n_2}{N_2} \mathbf{b}_2, 
@@ -104,7 +104,7 @@ are defined as the solution of the following equation
    B = \left( \begin{array}{cc}
                \mathbf{b}_{1,1} & \mathbf{b}_{2,1} \\
                \mathbf{b}_{1,2} & \mathbf{b}_{2,1}
-      \end{array} \right) A = 2\pi    B = \left( \begin{array}{cc}
+      \end{array} \right) A = 2\pi \left( \begin{array}{cc}
                1 & 0 \\
                0 & 1
       \end{array} \right).
@@ -123,9 +123,9 @@ complex conjugate
 An important quantity for many application is to find the set of :math:`k_F{\rm s}`  that satisfy the following constrain
 
 .. math:: 
-   H(\textbf{k}_F) - E_F = 0
+   {\rm eigvals}[ H(\textbf{k}_F) - - E_F \mathbb{I} ]= 0
 
-where :math:`E_F` the Fermi level of the system, and the set :math:`\{k_F\}` the so-called Fermi momentum. 
+where :math:`E_F` the Fermi level of the system, the identity matrix, eigval a function that compute the eigenvalues of the system and the set :math:`\{k_F\}` the so-called Fermi momentum. 
 
 The problem
 ***********
@@ -133,9 +133,11 @@ The problem
 For a given system size :math:`(N_1,N_2)` (typicall above 1000 ), look for the set of :math:`(n_1,n_2)` with :math:`n_1=0,\dots, N_1` and :math:`n_2=0,\dots, N_2` that satisfies:
 
 .. math::
-   {\rm eigval}\left[ H((\textbf{k})(n_1,n_2)) - E_F \mathbb{I} ] =0
+   {\rm eigval}\left[ H((\textbf{k})(n_1,n_2)) - E_F \mathbb{I} \right] =0
 
-where math:`\mathbb{I}` the identity matrix, and eigval a function that compute the eigenvalues of the system 
+
+
+
 
 
    
