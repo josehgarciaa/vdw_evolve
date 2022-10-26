@@ -49,10 +49,34 @@ Let us consider know, another lattice B, represent by the unit cell matrix
                \mathbf{b}_1|_2 & \mathbf{b}_2|_2
       \end{array} \right).
 
-for instance, this could be a lattice with a different symmetry such a square one
+for instance, this could be a lattice with a different symmetry such a the square Lattice.
 
 .. image:: images/example0_square_lattice.png
    :width: 600
+
+If we stack these two lattices together, a new lattice may form, but its not guarantee since the lattice can be incomesurate, meaning that
+the ratio of their periods along any given direction in space is not an integer and therefore the entire collection of points won't repite periodically. 
+
+Let us work under the assumption the are commesurate. Therefore, there exist two transformation :math:`T_A` and :math:`T_B` that will generate the same set of points
+of the super cell :math:`R_sc`, i.e
+
+.. math::
+   R_sc = T_A A = T_B b,
+
+where 
+.. math::
+   :label: super_cell_eq
+   T_\alpha = \left( \begin{array}{cc}
+               i_\alpha & j_\alpha \\
+               k_\alpha & l_\alpha
+      \end{array} \right), \quad \alpha = A,B
+
+just discrete linear transformations. Its clear that if :math:`A` describe the points of a bravai lattice, a 
+linear combination of the lattice vectors :math:`T_A A` will describe another allowed unit cell. 
+The role of equation :ref:`super_cell_eq` is two transform the two initial unit cell represents into a new common cell.  
+
+
+
 
 
 
