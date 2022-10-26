@@ -16,7 +16,7 @@ this means that a lattices is the collections of points :math:`R(n_1,n_2)` that 
 .. math::
    R(n_1,n_2) = n_1 \mathbf{a}_1 + n_2 \mathbf{a}_2, 
 
-where :math:`\mathbf{a}_1` and :math:`\mathbf{a}_2` two noncollinear two-dimensional vectors known as the lattice vectors. An example of a lattice is presented
+where :math:`{\mathbf{a}_1}` and :math:`{\mathbf{a}_2}` two noncollinear two-dimensional vectors known as the lattice vectors. An example of a lattice is presented
 below:
 
 .. image:: images/example0_honeycomb_lattice.svg
