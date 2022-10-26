@@ -10,6 +10,7 @@ Welcome to the VdW Evolve documentation page!
    :maxdepth: 2
    :caption: Contents:
    
+   theory
    examples
 
 Indices and tables

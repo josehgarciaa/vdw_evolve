@@ -64,16 +64,17 @@ of the super cell :math:`R_sc`, i.e
    R_sc = T_A A = T_B b,
 
 where 
+
 .. math::
-   :label: super_cell_eq
    T_\alpha = \left( \begin{array}{cc}
-               i_\alpha & j_\alpha \\
-               k_\alpha & l_\alpha
-      \end{array} \right), \quad \alpha = A,B
+   i_\alpha & j_\alpha \\
+   k_\alpha & l_\alpha
+   \end{array} \right)
+   :label: super_cell_eq
 
 just discrete linear transformations. Its clear that if :math:`A` describe the points of a bravai lattice, a 
 linear combination of the lattice vectors :math:`T_A A` will describe another allowed unit cell. 
-The role of equation :ref:`super_cell_eq` is two transform the two initial unit cell represents into a new common cell.  
+The role of equation :eq:`super_cell_eq` is two transform the two initial unit cell represents into a new common cell.  
 
 
 
