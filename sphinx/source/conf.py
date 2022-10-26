@@ -75,8 +75,8 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'kotti_docs_theme'
-html_theme_path = [kotti_docs_theme.get_theme_dir()]
+#html_theme = 'kotti_docs_theme'
+#html_theme_path = [kotti_docs_theme.get_theme_dir()]
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
