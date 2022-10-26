@@ -4,7 +4,7 @@
           content="text/html; charset=utf-8"/>
     <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-        <title>Welcome to the VdW Evolve documentation page! &mdash; vdw_evolve 0.0.1 documentation</title>
+        <title>Examples &mdash; vdw_evolve 0.0.1 documentation</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='http://fonts.googleapis.com/css?family=Crete+Round' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="_static/sphinx-bootstrap.css" type="text/css"/>
@@ -30,12 +30,13 @@
             <script type="text/javascript" src="_static/_sphinx_javascript_frameworks_compat.js"></script>
             <script type="text/javascript" src="_static/doctools.js"></script>
             <script type="text/javascript" src="_static/sphinx_highlight.js"></script>
+            <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
             <script type="text/javascript" src="_static/bootstrap-dropdown.js"></script>
             <link rel="index" title="Index"
                   href="genindex.html"/>
             <link rel="search" title="Search" href="search.html"/>
-        <link rel="top" title="vdw_evolve 0.0.1 documentation" href="#"/>
-            <link rel="next" title="The Theory behind" href="theory.html"/> 
+        <link rel="top" title="vdw_evolve 0.0.1 documentation" href="index.html"/>
+            <link rel="prev" title="The Theory behind" href="theory.html"/> 
     <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
     
 </head>
@@ -47,14 +48,14 @@
 
     <div class="related">
         <ul class="nav">
-                <li class=""><a class="brand" href="#">vdw_evolve</a></li>
+                <li class=""><a class="brand" href="index.html">vdw_evolve</a></li>
                 <li>
                     <a href="genindex.html"
                        title="General Index" accesskey="I">index</a>
                 </li>
                 <li>
                     <a href="theory.html"
-                       title="The Theory behind" accesskey="N">next</a>
+                       title="The Theory behind" accesskey="P">previous</a>
                 </li> 
         </ul>
     </div>
@@ -75,31 +76,64 @@
         <div class="content row">
                 <div class="span9">
                     
-  <section id="welcome-to-the-vdw-evolve-documentation-page">
-<h1>Welcome to the VdW Evolve documentation page!<a class="headerlink" href="#welcome-to-the-vdw-evolve-documentation-page" title="Permalink to this heading">¶</a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="theory.html">The Theory behind</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="theory.html#niggli-cells">Niggli cells</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#minimal-supercell">Minimal Supercell</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#optimal-fermi-contour">Optimal Fermi Contour</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#id1">Optimal Fermi Contour</a></li>
-</ul>
-</li>
-</ul>
-</div>
+  <section id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h1>
+<section id="minimal-supercell">
+<h2>Minimal Supercell<a class="headerlink" href="#minimal-supercell" title="Permalink to this heading">¶</a></h2>
+<p>A Bravais lattice is a discrete collection of infinite points all related by a set of discrete translations follow a pattern. For instance, in two dimensions
+this means that a lattices is the collections of points <span class="math notranslate nohighlight">\(R(n_1,n_2)\)</span> that satisfies the following equation</p>
+<div class="math notranslate nohighlight">
+\[R(n_1,n_2) = n_1 \mathbf{a}_1 + n_2 \mathbf{a}_2,\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{a}_1}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{2}_1}\)</span> two noncollinear two-dimensional vectors known as the lattice vectors. An example of a lattice is presented
+below:</p>
+<a class="reference internal image-reference" href="_images/example0_honeycomb_lattice.svg"><img alt="_images/example0_honeycomb_lattice.svg" src="_images/example0_honeycomb_lattice.svg" width="600" /></a>
+<section id="unit-cell">
+<h3>Unit cell<a class="headerlink" href="#unit-cell" title="Permalink to this heading">¶</a></h3>
+<p>For convenience, let us group the lattice vectors as columns in a :math: <cite>2times2</cite> matrix</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}A = \left( \begin{array}{cc}
+            \mathbf{a}_1\cdot\mathbf{a}_1 &amp; \mathbf{a}_1\cdot\mathbf{a}_2 \\
+            0                             &amp; \mathbf{a}_2\cdot\mathbf{a}_2
+   \end{array} \right).\end{split}\]</div>
+<p>The determinant of matrix <span class="math notranslate nohighlight">\(A\)</span> describes the area of the plane formed by the lattice vectors, and within this area there is a collection of points.
+This collection of points is known as unit cell, and represent a possible subset of points that can be translate with these unit vectors that fully represents
+the lattice. We will call the matrix <span class="math notranslate nohighlight">\(A\)</span> unit cell matrix.</p>
 </section>
-<section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">¶</a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
+<section id="van-der-waal-cells">
+<h3>Van der Waal cells<a class="headerlink" href="#van-der-waal-cells" title="Permalink to this heading">¶</a></h3>
+<p>Let us consider know, another lattice B, represent by the unit cell matrix</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}B = \left( \begin{array}{cc}
+            \mathbf{b}_1\cdot\mathbf{b}_1 &amp; \mathbf{b}_1\cdot\mathbf{b}_2 \\
+            0                             &amp; \mathbf{b}_2\cdot\mathbf{b}_2
+            \end{array} \right).\end{split}\]</div>
+<p>for instance, this could be a lattice with a different symmetry such a square one</p>
+<a class="reference internal image-reference" href="_images/example0_square_lattice.png"><img alt="_images/example0_square_lattice.png" src="_images/example0_square_lattice.png" style="width: 600px;" /></a>
+</section>
+</section>
+<section id="optimal-fermi-contour">
+<h2>Optimal Fermi Contour<a class="headerlink" href="#optimal-fermi-contour" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div><p>such as the hexagonal lattice below.</p>
+</div></blockquote>
+<a class="reference internal image-reference" href="_images/example0_honeycomb_lattice.svg"><img alt="_images/example0_honeycomb_lattice.svg" src="_images/example0_honeycomb_lattice.svg" width="600" /></a>
+<p>A unit cell, is sub re  minimum representation of a lattice can be tattice,</p>
+<p>Let us start by considering two set of vector sets described by the matrices</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}\tilde{A} = \left( \begin{array}{cc}
+                          \mathbf{a}_1\cdot\mathbf{a}_1 &amp; \mathbf{a}_1\cdot\mathbf{a}_2 \\
+                          0                             &amp; \mathbf{a}_2\cdot\mathbf{a}_2
+              \end{array} \right),\end{split}\\and B\end{aligned}\end{align} \]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\tilde{B} = \left( \begin{array}{cc}
+                     \mathbf{b}_1\cdot\mathbf{b}_1 &amp; \mathbf{b}_1\cdot\mathbf{b}_2 \\
+                     0                             &amp; \mathbf{b}_2\cdot\mathbf{b}_2
+         \end{array} \right),\end{split}\]</div>
+<p>where the columns represents a basis for a two-dimensional space.</p>
+</section>
+<section id="id1">
+<h2>Optimal Fermi Contour<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+</section>
 </section>
 
 
@@ -114,20 +148,28 @@
     </li>
     <li>
         <ul>
-<li><a class="reference internal" href="#">Welcome to the VdW Evolve documentation page!</a></li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#minimal-supercell">Minimal Supercell</a><ul>
+<li><a class="reference internal" href="#unit-cell">Unit cell</a></li>
+<li><a class="reference internal" href="#van-der-waal-cells">Van der Waal cells</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#optimal-fermi-contour">Optimal Fermi Contour</a></li>
+<li><a class="reference internal" href="#id1">Optimal Fermi Contour</a></li>
+</ul>
+</li>
 </ul>
 
     </li>
-  <li class="nav-header">Next topic</li>
+  <li class="nav-header">Previous topic</li>
   <li>
     <a href="theory.html"
-       title="next chapter">The Theory behind</a>
+       title="previous chapter">The Theory behind</a>
   </li>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/index.rst.txt"
+      <li><a href="_sources/examples.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
