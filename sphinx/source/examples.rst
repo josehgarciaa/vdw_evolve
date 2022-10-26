@@ -130,7 +130,7 @@ where :math:`E_F` the Fermi level of the system, and the set :math:`\{k_F\}` the
 The problem
 ***********
 
-For a given system size :math:`(N_1,N_2)` (typicall above 1000 ), look for the set of :math:`(n_1,n_2)` that satisfies:
+For a given system size :math:`(N_1,N_2)` (typicall above 1000 ), look for the set of :math:`(n_1,n_2)` with :math:`n_1=0,\dots, N_1` and :math:`n_2=0,\dots, N_2` that satisfies:
 
 .. math::
    {\rm eigval}\left[ H((\textbf{k})(n_1,n_2)) - E_F \mathbb{I} ] =0
