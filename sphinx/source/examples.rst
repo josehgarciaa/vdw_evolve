@@ -117,9 +117,9 @@ Let us now consider that the Hamiltonian matrix in the momentum space is given b
                f(\textbf{k})* & 0
       \end{array} \right),
 
-where :math:`f(k) = {\rm e}^{k\textbf{k}\cdot \textbf{a}_1}+ {\rm e}^{k\textbf{k}\cdot \textbf{a}_2}+ 1 `
+where :math:`f(k) = {\rm e}^{k\textbf{k}\cdot \textbf{a}_1}+ {\rm e}^{k\textbf{k}\cdot \textbf{a}_2}+ 1`
 
-An important quantity for many application is to find the set of :math:`k_F`s that satisfy the following constrain
+An important quantity for many application is to find the set of :math:`k_F{\rm s}`  that satisfy the following constrain
 
 .. math:: 
    H(\textbf{k}_F) - E_F = 0
