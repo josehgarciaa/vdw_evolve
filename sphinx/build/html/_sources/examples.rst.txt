@@ -123,7 +123,7 @@ complex conjugate
 An important quantity for many application is to find the set of :math:`k_F{\rm s}`  that satisfy the following constrain
 
 .. math:: 
-   {\rm eigvals}[ H(\textbf{k}_F) -  E_F \mathbb{I} ]= 0
+   {\rm eigval}[ H(\textbf{k}_F) -  E_F \mathbb{I} ]= 0
 
 where :math:`E_F` the Fermi level of the system, where :math:`\mathbb{I}` the identity matrix, 
 eigval a function that compute the eigenvalues of the system and the set :math:`\{k_F\}` the so-called Fermi momentum. 
@@ -137,6 +137,7 @@ For a given system size :math:`(N_1,N_2)` (typicall above 1000 ), look for the s
    {\rm eigval}\left[ H((\textbf{k})(n_1,n_2)) - E_F \mathbb{I} \right] =0
 
 
+Please use :math:`a_1=(1/2,\sqrt{3}/2)` and  :math:`a_2=(1/2,-\sqrt{3}/2)`
 
 
    
