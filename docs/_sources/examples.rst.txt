@@ -29,8 +29,8 @@ For convenience, let us group the lattice vectors as columns in a :math:`2\times
 
 .. math::
    A = \left( \begin{array}{cc}
-               \mathbf{a}_1|_1 & \mathbf{a}_2|_1 \\
-               \mathbf{a}_1|_2 & \mathbf{a}_2|_2
+               \mathbf{a}_{1,1} & \mathbf{a}_{2,1} \\
+               \mathbf{a}_{1,2} & \mathbf{a}_{2,1}
       \end{array} \right).
 
 The determinant of matrix :math:`A` describes the area of the plane formed by the lattice vectors, and within this area there is a collection of points. 
@@ -45,8 +45,8 @@ Let us consider know, another lattice B, represent by the unit cell matrix
 
 .. math::
    B = \left( \begin{array}{cc}
-               \mathbf{b}_1|_1 & \mathbf{b}_2|_1 \\
-               \mathbf{b}_1|_2 & \mathbf{b}_2|_2
+               \mathbf{b}_{1,1} & \mathbf{b}_{2,1} \\
+               \mathbf{b}_{1,2} & \mathbf{b}_{2,1}
       \end{array} \right).
 
 for instance, this could be a lattice with a different symmetry such a the square Lattice.
@@ -61,7 +61,7 @@ Let us work under the assumption the are commesurate. Therefore, there exist two
 of the super cell :math:`R_sc`, i.e
 
 .. math::
-   R_sc = T_A A = T_B b,
+   R_sc = T_A A = T_B B,
 
 where 
 
@@ -69,13 +69,23 @@ where
    T_\alpha = \left( \begin{array}{cc}
    i_\alpha & j_\alpha \\
    k_\alpha & l_\alpha
-   \end{array} \right)
+   \end{array} \right),\quad \alpha=A,B
    :label: super_cell_eq
 
 just discrete linear transformations. Its clear that if :math:`A` describe the points of a bravai lattice, a 
 linear combination of the lattice vectors :math:`T_A A` will describe another allowed unit cell. 
 The role of equation :eq:`super_cell_eq` is two transform the two initial unit cell represents into a new common cell.  
 
+The problem:
+************
+
+For two arbitrary sets lattice vector sets :math:`A` and :math:`B`, find the set of 8 integers :math:`I:=(i_A,i_A,j_A,J_B,k_B,k_B,l_A,l_B)`  
+that satisfy
+
+.. math::
+   T_A A - T_B B
+
+with minium  :math:`|det(T_A A)|>0`.   
 
 
 
