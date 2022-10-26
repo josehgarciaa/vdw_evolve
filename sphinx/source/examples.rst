@@ -114,10 +114,11 @@ Let us now consider that the Hamiltonian matrix in the momentum space is given b
 .. math:: 
    H(\textbf{k}) = \left( \begin{array}{cc}
                0             & f(\textbf{k}) \\
-               f(\textbf{k})* & 0
+               f^*(\textbf{k}) & 0
       \end{array} \right),
 
-where :math:`f(k) = {\rm e}^{k\textbf{k}\cdot \textbf{a}_1}+ {\rm e}^{k\textbf{k}\cdot \textbf{a}_2}+ 1`
+where :math:`f(k) = {\rm e}^{k\textbf{k}\cdot \textbf{a}_1}+ {\rm e}^{k\textbf{k}\cdot \textbf{a}_2}+ 1` and :math:`f^*(\textbf{k})` represents its 
+complex conjugate
 
 An important quantity for many application is to find the set of :math:`k_F{\rm s}`  that satisfy the following constrain
 
