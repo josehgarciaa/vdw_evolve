@@ -101,15 +101,15 @@ where :math:`N_1` and :math:`N_2` the number of unit cells contained in your cry
 are defined as the solution of the following equation
 
 .. math:: 
-   BA = \left( \begin{array}{cc}
+   B^T A = \left( \begin{array}{cc}
                \mathbf{b}_{1,1} & \mathbf{b}_{2,1} \\
                \mathbf{b}_{1,2} & \mathbf{b}_{2,2}
-      \end{array} \right) A = 2\pi \left( \begin{array}{cc}
+      \end{array} \right)^T A = 2\pi \left( \begin{array}{cc}
                1 & 0 \\
                0 & 1
       \end{array} \right),
 
-,herefore, :math:`B= 2\pi A^{-1}`. Let us now consider that the Hamiltonian matrix in the momentum space is given by the following expression
+,herefore, :math:`B^T= 2\pi A^{-1}`. Let us now consider that the Hamiltonian matrix in the momentum space is given by the following expression
 
 .. math:: 
    H(\textbf{k}) = \left( \begin{array}{cc}
