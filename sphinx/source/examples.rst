@@ -101,15 +101,15 @@ where :math:`N_1` and :math:`N_2` the number of unit cells contained in your cry
 are defined as the solution of the following equation
 
 .. math:: 
-   B = \left( \begin{array}{cc}
+   BA = \left( \begin{array}{cc}
                \mathbf{b}_{1,1} & \mathbf{b}_{2,1} \\
                \mathbf{b}_{1,2} & \mathbf{b}_{2,2}
       \end{array} \right) A = 2\pi \left( \begin{array}{cc}
                1 & 0 \\
                0 & 1
-      \end{array} \right).
+      \end{array} \right),
 
-Let us now consider that the Hamiltonian matrix in the momentum space is given by the following expression
+,herefore, :math:`B= 2\pi A^{-1}`. Let us now consider that the Hamiltonian matrix in the momentum space is given by the following expression
 
 .. math:: 
    H(\textbf{k}) = \left( \begin{array}{cc}
@@ -117,7 +117,7 @@ Let us now consider that the Hamiltonian matrix in the momentum space is given b
                f^*(\textbf{k}) & 0
       \end{array} \right),
 
-where :math:`f(k) = {\rm e}^{k\textbf{k}\cdot \textbf{a}_1}+ {\rm e}^{k\textbf{k}\cdot \textbf{a}_2}+ 1` and :math:`f^*(\textbf{k})` represents its 
+where :math:`f(k) = {\rm e}^{i\textbf{k}\cdot \textbf{a}_1}+ {\rm e}^{i\textbf{k}\cdot \textbf{a}_2}+ 1` and :math:`f^*(\textbf{k})` represents its 
 complex conjugate
 
 An important quantity for many application is to find the set of :math:`k_F{\rm s}`  that satisfy the following constrain
