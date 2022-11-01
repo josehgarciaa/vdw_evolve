@@ -11,7 +11,7 @@ Welcome to the VdW Evolve documentation page!
    :caption: Contents:
    
    theory
-
+   examples
 
 Indices and tables
 ==================
