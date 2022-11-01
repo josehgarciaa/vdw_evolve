@@ -89,7 +89,8 @@ class Gen1:
             for subject_number in range(self.model_par["subjects_in_cell"]):
                 subject = []
                 for feature_bound in cell_constrains:
-                    subject.append(random.randint(feature_bound[0], feature_bound[1]))
+                    # print(feature_bound)
+                    subject.append(random.randint(int(feature_bound[0]), int(feature_bound[1])))
                 generation_0.append(subject)
 
         return generation_0
@@ -142,13 +143,7 @@ class Gen1:
 
     def reproduction(self, generation, performances):
         """
-        This function mixed the solutions in order to give birth to new possible solutions.
-        It requires as an input an old generation, and the output will be a new generation made by mixing the previous
-        solutions. Hyper parameters that affect this function are 'pins' and 'gene_quality'.
-
-        :param generation:: [[int, int ,...],[int,..]]
-        :param performances:: [float, float...]
-        :return::[[int, int ,...],[int,..]]
+  
         """
         nr_pins = self.model_par["pins"]
         lower_pick = np.sqrt(min(performances) * min(performances))
