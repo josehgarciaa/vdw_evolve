@@ -130,8 +130,12 @@ class Gen1:
         performances = []
         for family in family_generation:
             champ = family[0]
+
+            # print("fam:\n", family[0])
+            # print("performance:\n", self.ev_function(family[0]))
             champ_performance = -self.ev_function(family[0])
             for children_nr in range(len(family)):
+
                 performance = -self.ev_function(family[children_nr])
                 if performance > champ_performance:
                     champ_performance = performance
@@ -217,6 +221,7 @@ class Gen1:
             gen_0 = self.actual_generation
             clone_family = self.mitosis()
             # kill
+            # print("clone_family",clone_family )
             generation, performances = self.kill(clone_family)
             # new born
             new_generation = self.reproduction(generation, performances)
