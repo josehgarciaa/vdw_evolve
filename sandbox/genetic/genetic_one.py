@@ -149,9 +149,22 @@ class Gen1:
         """
   
         """
+
+        # Comparing each element with first item
+        print("perf", performances)
+        chk = True
+        for i in range(1,len(performances)) :
+            if performances[i] != performances[i-1]:
+                chk = False
+                break
+        if chk:
+            lower_pick = np.sqrt(performances[0] * performances[0])
+        else:
+            lower_pick = np.sqrt(min(performances) * min(performances))
+
         nr_pins = self.model_par["pins"]
-        lower_pick = np.sqrt(min(performances) * min(performances))
-        performances = [p + lower_pick for p in performances]
+
+        performances = [p + lower_pick+0.001 for p in performances]
         s = 0
         for performance in performances:
             s += performance
@@ -224,6 +237,7 @@ class Gen1:
             # print("clone_family",clone_family )
             generation, performances = self.kill(clone_family)
             # new born
+
             new_generation = self.reproduction(generation, performances)
             # update
             self.actual_generation = new_generation
@@ -239,14 +253,13 @@ class Gen1:
             self.actual_generation = new_generation
             # actualisation
 
-
             if condition(new_generation):
                 print("Condition fulfilled. Evolution process ended!\n Last generation{}".format(new_generation))
                 if history:
                     return new_generation, evolution_history
                 return new_generation
 
-            print("Evolution process ended!\nLast generation: {}".format(new_generation))
+        print("Evolution process ended!\nLast generation: {}".format(new_generation))
         if history:
             return new_generation, evolution_history
         return new_generation
