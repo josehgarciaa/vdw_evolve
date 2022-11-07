@@ -14,6 +14,7 @@ class Annealing1:
         self.ev_function = fitness_function
         self.model_par = model_par
         self.actual_solution = start_point
+        self.actual_value =self.ev_function(self.actual_solution)
         self.actual_temp = self.model_par["initialTemp"]
         self.final_temp = self.model_par["finalTemp"]
         self.history = history
@@ -26,6 +27,9 @@ class Annealing1:
     def stop_criteria(self):
         flag = False
         flag = self.actual_temp <= self.final_temp
+        if self.actual_value<= self.model_par['known_min']:
+            flag = True
+
         return flag
 
     def get_neighbours(self):
@@ -44,7 +48,7 @@ class Annealing1:
 
         return neighbours
 
-    def evolve(self, epochs, prints_p=5):
+    def evolve(self, epochs, prints_p=5, tr_print=True):
         history_book = {'solutions': [self.actual_solution], 'changes': [0], 'temperature': [self.actual_temp]}
         while  self.stop_criteria() == False:
 
@@ -56,18 +60,20 @@ class Annealing1:
                 # neighbour picking
                 choice = np.random.choice([i for i in range(len(neighbours))])
                 new_solution = neighbours[choice]
-
+                new_val = self.ev_function(new_solution)
                 # change in solution
-                change = -self.ev_function(self.actual_solution) + self.ev_function(new_solution)
+                change = -self.ev_function(self.actual_solution) + new_val
 
                 if change <= 0:
                     self.actual_solution = new_solution
+                    self.actual_value= new_val
                 else:
                     if random.uniform(0, 1) < np.exp(-change / self.actual_temp):
                         self.actual_solution = new_solution
+                        self.actual_value = new_val
 
                 val = self.ev_function(self.actual_solution)
-                if epoch % prints_p == 0:
+                if epoch % prints_p == 0 and tr_print:
                     print("temp:{}|epoch:{}|change:{}|value:{}".format(self.actual_temp, epoch, change, val, ))
             # temperature adjustment
             self.temp_reduction()
