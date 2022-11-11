@@ -53,7 +53,7 @@ class Annealing1:
         return neighbours
 
     def evolve(self, epochs, prints_p=5, tr_print=True):
-        history_book = {'solutions': [self.actual_solution], 'changes': [0], 'temperature': [self.actual_temp]}
+        history_book = {'solutions': [self.actual_solution],'values':[self.actual_value], 'changes': [0], 'temperature': [self.actual_temp]}
         while self.stop_criteria() == False:
 
             for epoch in range(epochs):
@@ -83,6 +83,7 @@ class Annealing1:
             self.temp_reduction()
             if self.history:
                 history_book['solutions'].append(self.actual_solution)
+                history_book['values'].append(self.actual_value)
                 history_book['changes'].append(change)
                 history_book['temperature'].append(self.actual_temp)
 
