@@ -97,5 +97,6 @@ class Annealing1:
         low = bounds[0]
         upp = bounds[1]
         sd = self.model_par['gaussian_sd']
+        # print("p1:{}|p2:{}|mean:{}|sd:{}".format((low - mean) / sd, (upp - mean) / sd, mean,sd))
         trunc_norm = truncnorm((low - mean) / sd, (upp - mean) / sd, loc=mean, scale=sd).rvs()
         return round(trunc_norm)

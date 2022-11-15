@@ -36,7 +36,9 @@ class GradientAnnealing(Annealing1):
                     p_in_p[p_in] += delta_p
                     grad = (self.ev_function(p_in_m) - self.ev_function(p_in_p)) / (2 * delta_p)
                     p = self.actual_solution[p_in] + gradient_step_size * grad  # maybe heare i could add the gradient
-                    p = self.g_distribution(p, self.bounds[p_in])
+                    # print("p:",p)
+                    # print("bounds:",self.bounds[p_in] )
+                    p = self.g_distribution(round(p), self.bounds[p_in])
                     p = round(p)
                     neighbour.append(p)
             else:
