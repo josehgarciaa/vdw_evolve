@@ -1,5 +1,5 @@
 """
-** file:///C:/Users/tomut/Downloads/neighbour%20simulated%20anneling.pdf
+
 """
 
 import random
