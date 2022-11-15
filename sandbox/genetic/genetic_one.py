@@ -50,7 +50,7 @@ class Gen1:
         """
         Base class for genetic algorithm,
         this  example is constrained to optimize over integers.
-        :param fitness_function: The function of which the minimum value needs to be found. .
+        :param fitness_function: The function of which the minimum value needs to be found.
         :param input_size::int Number of variables of the fitness function.
         :param input_ranges:[[int, int]...] Boundaries for each parameter of the fitness_function
         :param model_par:{} A python dictionary that contains the hyper-parameters of the experiment.
