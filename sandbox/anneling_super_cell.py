@@ -70,7 +70,9 @@ def fit_function(params, a, b):
     tB_con = 0
     for row in tB:
         for e in row:
-            tB_con += ((round(e) - e)) * ((round(e) - e))  # e*e
+            z_ero1= ((round(e) - e)) * ((round(e) - e))
+
+            tB_con += z_ero1/10 # e*e
     tB_con = tB_con * cons
 
     tA_lenghth = ((tA[0][0] ** 2 + tA[0][1] ** 2) + (tA[1][0] ** 2 + tA[1][1] ** 2)) * 100
