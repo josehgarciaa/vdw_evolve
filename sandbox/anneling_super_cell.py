@@ -1,6 +1,7 @@
 import numpy as np
 from numpy.linalg import det, inv
 
+from scipy.optimize import minimize
 
 from anneling import Annealing1
 
@@ -40,6 +41,51 @@ def at_sin(x, up=99999999):
     return res
 
 
+def strain_tune(x, tB_, optimize=True):
+    strain = np.array([[1 + x[0], 0],
+                       [0, 1 + x[1]]])
+
+    # Strain*tB_strained =tB_ => tB_strained=inv(Strain)*tB
+    if optimize:
+        # print(x)
+        # print("setst:", det(strain))
+        tB_strain = np.dot(inv(strain), tB_)
+        cons = 99999
+        tB_con = 0
+        for row in tB_strain:
+            for e in row:
+                tB_con += ((round(e) - e)) * ((round(e) - e))  # e*e
+        tB_con = tB_con * cons + (x[1] ** 2 + x[0] ** 2) * cons
+        return tB_con
+
+    return strain
+
+
+def streined_proces(tB, strain_boundery):
+    #     def constraint1(x):
+    #         return 1 if (strain_boundery[0][0]<=x[0]<=strain_boundery[0][1]) and(strain_boundery[1][0]<=x[1]<=strain_boundery[1][1]) else 0
+    #     def constraint2(x):
+    # #         print("call",x)
+
+    #         return 0 if (1+x[1])*(1+x[0]) ==0 else  1
+    #     con1 = {'type': 'ineq', 'fun':constraint1}
+    #     con2 = {'type': 'ineq', 'fun':constraint2}
+    #     cons =([con1, con2])
+
+    strain_cost = lambda x: strain_tune(x, tB_=tB)
+    x0 = np.array([0, 0])
+    res = minimize(strain_cost, x0,
+                   # constraints =cons,
+                   bounds=strain_boundery,
+                   method='L-BFGS-B'  # 'COBYLA'#L-BFGS-B',#
+                   )
+
+    #                options={'xatol': 1e-8, 'disp': True})
+    #     print("rx:",res.x)
+    #     print("cost:", strain_tune(res.x, tB, optimize=True))
+    strein = strain_tune(res.x, tB, optimize=False)
+    return strein
+
 def tAtB(params, a, b):
     tA = np.array([[params[0], params[1]],
                    [params[2], params[3]]])
@@ -49,10 +95,13 @@ def tAtB(params, a, b):
     return tA, tB
 
 
-def fit_function(params, a, b):
+def fit_function(params, a, b,strain_boundery = [[-0.5,0.5],[-0.5,0.5]]):
     tA, tB = tAtB(params, a, b)
     tAa = np.dot(tA, a)
     tBb = np.dot(tB, b)
+    # Strain tunning
+    strain = streined_proces(tB, strain_boundery)
+    tB = np.dot(strain, tB)
 
     # main condition
     zero_mat = tAa - tBb
@@ -70,7 +119,7 @@ def fit_function(params, a, b):
     tB_con = 0
     for row in tB:
         for e in row:
-            z_ero1= ((round(e) - e)) * ((round(e) - e))
+            z_ero1 = ((round(e) - e)) * ((round(e) - e))
 
             tB_con += z_ero1/10 # e*e
     tB_con = tB_con * cons
