@@ -1,3 +1,9 @@
+"""
+This file wraps up the routine for calculating the minimum supercell for overlapping the 2D lattices.
+Example:
+
+"""
+
 import numpy as np
 from numpy.linalg import det, inv
 
@@ -6,7 +12,7 @@ from scipy.optimize import minimize
 from anneling import Annealing1
 
 
-def build_annealing(cel1, cel2, nr_epochs, model_par):
+def super_cell(cel1, cel2, nr_epochs, model_par):
     """
 
     :param model_par:
@@ -15,22 +21,94 @@ def build_annealing(cel1, cel2, nr_epochs, model_par):
     :param nr_epochs:
     :return:
     """
-    fit = lambda params: fit_function(params, a=cel1, b=cel2)
-    experiment = Annealing1(fit, model_par["start_point"], model_par)
+
+    def cost(params):
+        """
+        Builds the function that needs to be optimized for the given case.
+        :param params:[int,init,int,int] parameters  (tA =params.transpose(2,2))
+        :return: float
+        """
+        return fit_function(params, cel1=cel1, cel2=cel2, strain_boundary=model_par["strain_boundary"])
+
+    # Build the experiment setup.
+    experiment = Annealing1(cost, model_par["start_point"], model_par)
+    # Evolve the experiment to found the solution.
     history_book = experiment.evolve(nr_epochs, prints_p=5)
-
     solution = experiment.actual_solution
-    tA, tB = tAtB(solution, cel1, cel2)
-    strain = get_strain(tB)
-    return tA, tB, strain
+
+    t_cel1, t_cel2 = t_cel1t_cel2(solution, cel1, cel2)
+    strain = brut_strain(t_cel2)
+    diagonal_strain = strained_proces(t_cel2, strain_boundary=model_par["strain_boundary"])
+    t_cel2_no_strain = np.dot(inv(strain), t_cel2)
+
+    return t_cel1, t_cel2, t_cel2_no_strain, strain, diagonal_strain
 
 
-def at_sin(x, up=99999999):
+def t_cel1t_cel2(params, cel1, cel2):
     """
 
-    :param x:
-    :param up:
+    :param params: [int,int,int, int] parameters for the transformation that will apply on cel1
+    :param cel1:
+    :param cel2:
     :return:
+    """
+    t_cel1 = np.array([[params[0], params[1]],
+                       [params[2], params[3]]])
+
+    t_cel2 = np.dot(np.dot(t_cel1, cel1), inv(cel2))  # tAa=tBb
+
+    return t_cel1, t_cel2
+
+
+def fit_function(params, cel1, cel2, strain_boundary=[[-0.5, 0.5], [-0.5, 0.5]]):
+    """
+    This creates a cost that the annealing process will minimize.
+    The cost is proportional to the area of the supercell
+    and the length of the new based vectors.
+    :param params: 
+    :param cel1: 
+    :param cel2: 
+    :param strain_boundary: 
+    :return:
+    """
+    t_cel1, t_cel2 = t_cel1t_cel2(params, cel1, cel2)
+    super_c_1 = np.dot(t_cel1, cel1)
+
+    # It's a chance that a solution with t_cel2 integer does not exist. So if the t_cel2 has float values,
+    # we will decompose it in a new t_cel2 integer and a strain(diagonal matrix), which multiply and reconstruct
+    # the initial matrix.
+    strain = strained_proces(t_cel2, strain_boundary)
+    t_cel2 = np.dot(strain, t_cel2)
+
+    # area of the new cel area = det(cel1)*det(t_cel1)
+    super_cel_area = det(super_c_1) * det(super_c_1)  # minimum but bigger than 0
+
+    # t_cel1 integer # cost for t_cel1 not be an integer
+    cons = 9999999
+    round_cost = 0
+    for row in t_cel2:
+        for e in row:
+            z_ero1 = (round(e) - e) * (round(e) - e)
+            round_cost += z_ero1 / 10
+    round_cost = round_cost * cons
+
+    # cost for minimizing the new vectors length
+    length_cost = ((t_cel1[0][0] ** 2 + t_cel1[0][1] ** 2) + (t_cel1[1][0] ** 2 + t_cel1[1][1] ** 2)) * 100
+
+    f = partial_cost_shape(super_cel_area) + round_cost ** 2 + length_cost
+
+    return f
+
+
+def partial_cost_shape(x, up=99999999):
+    """
+    This function will take the area of the new cell as a parameter
+    and it is built in such that it will take the minimum value when
+    the area is close to 1 and will go to inf in 0 and infinity.
+
+    :param x: float  super_cel_area
+    :param up: float  modul value of the peek in 1.
+    :return: float
     """
     tr_x = (x + 0.5)
 
@@ -41,101 +119,63 @@ def at_sin(x, up=99999999):
     return res
 
 
-def strain_tune(x, tB_, optimize=True):
+def strain_tune(x, target_matrix, optimize=True):
+    """
+    builds a diagonal matrix with the X parameters that will have the  job of strain
+    :param x:
+    :param target_matrix:
+    :param optimize:
+    :return:
+    """
     strain = np.array([[1 + x[0], 0],
                        [0, 1 + x[1]]])
 
     # Strain*tB_strained =tB_ => tB_strained=inv(Strain)*tB
     if optimize:
-        # print(x)
-        # print("setst:", det(strain))
-        tB_strain = np.dot(inv(strain), tB_)
+        cell_strain = np.dot(inv(strain), target_matrix)
         cons = 99999
-        tB_con = 0
-        for row in tB_strain:
+        round_count = 0
+        for row in cell_strain:
             for e in row:
-                tB_con += ((round(e) - e)) * ((round(e) - e))  # e*e
-        tB_con = tB_con * cons + (x[1] ** 2 + x[0] ** 2) * cons
-        return tB_con
+                round_count += (round(e) - e) * (round(e) - e) # e*e
+        round_count = round_count * cons + (x[1] ** 2 + x[0] ** 2) * cons
+        return round_count
 
     return strain
 
 
-def streined_proces(tB, strain_boundery):
-    #     def constraint1(x):
-    #         return 1 if (strain_boundery[0][0]<=x[0]<=strain_boundery[0][1]) and(strain_boundery[1][0]<=x[1]<=strain_boundery[1][1]) else 0
-    #     def constraint2(x):
-    # #         print("call",x)
+def strained_proces(target_matrix, strain_boundary):
+    """
+    Return a strain matrix with the propriety that multiplying  the inverse with the target matrix
+    will get a matrix of integers.
+    :param target_matrix:
+    :param strain_boundary:
+    :return:
+    """
 
-    #         return 0 if (1+x[1])*(1+x[0]) ==0 else  1
-    #     con1 = {'type': 'ineq', 'fun':constraint1}
-    #     con2 = {'type': 'ineq', 'fun':constraint2}
-    #     cons =([con1, con2])
+    def strain_cost(x):
+        return strain_tune(x, target_matrix=target_matrix)
 
-    strain_cost = lambda x: strain_tune(x, tB_=tB)
     x0 = np.array([0, 0])
     res = minimize(strain_cost, x0,
                    # constraints =cons,
-                   bounds=strain_boundery,
-                   method='L-BFGS-B'  # 'COBYLA'#L-BFGS-B',#
-                   )
+                   bounds=strain_boundary,
+                   method='L-BFGS-B' )
 
-    #                options={'xatol': 1e-8, 'disp': True})
-    #     print("rx:",res.x)
-    #     print("cost:", strain_tune(res.x, tB, optimize=True))
-    strein = strain_tune(res.x, tB, optimize=False)
-    return strein
-
-def tAtB(params, a, b):
-    tA = np.array([[params[0], params[1]],
-                   [params[2], params[3]]])
-
-    tB = np.dot(np.dot(tA, a), inv(b))  # tAa=tBb
-
-    return tA, tB
+    strain = strain_tune(res.x, target_matrix, optimize=False)
+    return strain
 
 
-def fit_function(params, a, b,strain_boundery = [[-0.5,0.5],[-0.5,0.5]]):
-    tA, tB = tAtB(params, a, b)
-    tAa = np.dot(tA, a)
-    tBb = np.dot(tB, b)
-    # Strain tunning
-    strain = streined_proces(tB, strain_boundery)
-    tB = np.dot(strain, tB)
-
-    # main condition
-    zero_mat = tAa - tBb
-    s = 0
-    for row in zero_mat:
-        for e in row:
-            s += e * e
-
-    # mimimum TA
-    detTAa = det(tAa) * det(tAa)  # minimum but biger than 0
-    detTBb = det(tBb) * det(tBb)
-
-    # TB integer
-    cons = 9999999
-    tB_con = 0
-    for row in tB:
-        for e in row:
-            z_ero1 = ((round(e) - e)) * ((round(e) - e))
-
-            tB_con += z_ero1/10 # e*e
-    tB_con = tB_con * cons
-
-    tA_lenghth = ((tA[0][0] ** 2 + tA[0][1] ** 2) + (tA[1][0] ** 2 + tA[1][1] ** 2)) * 100
-
-    f = at_sin(detTAa) + tB_con ** 2 + tA_lenghth
-    # ((1-detTAa)**2)*k_p + tB_con**2
-
-    return f
-
-
-def get_strain(tB):
-    tBr = tB.copy()
-    for i in range(len(tB)):
-        for j in range(len(tB[0])):
-            tBr[i][j] = round(tB[i][j])
-    S = np.dot(tBr, inv(tB))
-    return (S)
+def brut_strain(initial_matrix):
+    """
+    Will generate a matrix
+    that multiplied with the target matrix round it to the closest integer matrix.
+    :param initial_matrix: [[float,float],[float,float]]
+    :return: [[float,float],[float,float]]
+    """
+    round_matrix = initial_matrix.copy()
+    for i in range(len(initial_matrix)):
+        for j in range(len(initial_matrix[0])):
+            round_matrix[i][j] = round(initial_matrix[i][j])
+    strain = np.dot(round_matrix, inv(initial_matrix))
+    return strain
