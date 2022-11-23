@@ -41,7 +41,7 @@ def super_cell(cel1, cel2, nr_epochs, model_par):
     diagonal_strain = strained_proces(t_cel2, strain_boundary=model_par["strain_boundary"])
     t_cel2_no_strain = np.dot(inv(strain), t_cel2)
 
-    return t_cel1, t_cel2, t_cel2_no_strain, strain, diagonal_strain
+    return t_cel1, t_cel2, t_cel2_no_strain, diagonal_strain, strain,
 
 
 def t_cel1t_cel2(params, cel1, cel2):
@@ -60,7 +60,7 @@ def t_cel1t_cel2(params, cel1, cel2):
     return t_cel1, t_cel2
 
 
-def fit_function(params, cel1, cel2, strain_boundary=[[-0.5, 0.5], [-0.5, 0.5]]):
+def fit_function(params, cel1, cel2, strain_boundary):
     """
     This creates a cost that the annealing process will minimize.
     The cost is proportional to the area of the supercell
@@ -103,7 +103,7 @@ def fit_function(params, cel1, cel2, strain_boundary=[[-0.5, 0.5], [-0.5, 0.5]])
 def partial_cost_shape(x, up=99999999):
     """
     This function will take the area of the new cell as a parameter
-    and it is built in such that it will take the minimum value when
+    it is built in such that it will take the minimum value when
     the area is close to 1 and will go to inf in 0 and infinity.
 
     :param x: float  super_cel_area
@@ -137,7 +137,7 @@ def strain_tune(x, target_matrix, optimize=True):
         round_count = 0
         for row in cell_strain:
             for e in row:
-                round_count += (round(e) - e) * (round(e) - e) # e*e
+                round_count += (round(e) - e) * (round(e) - e)  # e*e
         round_count = round_count * cons + (x[1] ** 2 + x[0] ** 2) * cons
         return round_count
 
@@ -148,6 +148,7 @@ def strained_proces(target_matrix, strain_boundary):
     """
     Return a strain matrix with the propriety that multiplying  the inverse with the target matrix
     will get a matrix of integers.
+
     :param target_matrix:
     :param strain_boundary:
     :return:
@@ -160,7 +161,7 @@ def strained_proces(target_matrix, strain_boundary):
     res = minimize(strain_cost, x0,
                    # constraints =cons,
                    bounds=strain_boundary,
-                   method='L-BFGS-B' )
+                   method='L-BFGS-B')
 
     strain = strain_tune(res.x, target_matrix, optimize=False)
     return strain
