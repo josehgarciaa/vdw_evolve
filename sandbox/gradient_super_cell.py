@@ -9,7 +9,7 @@ from numpy.linalg import det, inv
 
 from scipy.optimize import minimize
 
-from anneling import Annealing1
+from anneling.annealing_grad import GradientAnnealing
 
 
 def super_cell(cel1, cel2, nr_epochs, model_par):
@@ -31,7 +31,7 @@ def super_cell(cel1, cel2, nr_epochs, model_par):
         return fit_function(params, cel1=cel1, cel2=cel2, strain_boundary=model_par["strain_boundary"])
 
     # Build the experiment setup.
-    experiment = Annealing1(cost, model_par["start_point"], model_par)
+    experiment = GradientAnnealing(cost, model_par["start_point"], model_par)
     # Evolve the experiment to found the solution.
     history_book = experiment.evolve(nr_epochs, prints_p=5)
     solution = experiment.actual_solution
