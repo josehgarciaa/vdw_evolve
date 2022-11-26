@@ -20,7 +20,10 @@ def get_data_as_pd(path, options, props):
     :return:
     """
     db = ase.db.connect(path)
+    # print("db",db)
+
     rows = db.select(options)
+    print("rows",rows)
     data = [[x.get(p) for p in props] for x in rows]
     raw_df = pd.DataFrame(data, columns=props)
     return raw_df
