@@ -78,7 +78,7 @@ def fit_function(params, cel1, cel2, strain_boundary):
     # we will decompose it in a new t_cel2 integer and a strain(diagonal matrix), which multiply and reconstruct
     # the initial matrix.
     strain = strained_proces(t_cel2, strain_boundary)
-    t_cel2 = np.dot(strain, t_cel2)
+    t_cel2 = np.dot(inv(strain), t_cel2)
 
     # area of the new cel area = det(cel1)*det(t_cel1)
     super_cel_area = det(super_c_1) * det(super_c_1)  # minimum but bigger than 0
