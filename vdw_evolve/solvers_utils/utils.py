@@ -125,3 +125,13 @@ def allign_along_10(cel1, cel2):
     cel2 = np.dot(ro2, cel2)
 
     return cel1, cel2
+
+
+
+def subject_test(params, cel1,cel2):
+    tA, tB= t_cel1t_cel2(params,cel1,cel2)
+    if np.linalg.det(tA)==0:
+        return False
+    if np.linalg.det(tB)==0:
+        return False
+    return True

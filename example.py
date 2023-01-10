@@ -1,5 +1,5 @@
 from vdw_evolve import get_data_as_pd, extract_structure, get_cell_from_structure_file  # vdw.parser
-from vdw_evolve import AnnealingSolver, MechanicSolver  # vdw.solvers
+from vdw_evolve import AnnealingSolver, MechanicSolver, GeneticSolver  # vdw.solvers
 from vdw_evolve import allign_along_10  # vdw.solvers_utils
 
 # Download data:
@@ -20,7 +20,6 @@ print(raw_df[["formula", "uid"]])
 
 # Download (only first 10 for the sake of example)
 extract_structure(raw_df["uid"][:10], save_path=structure_path)
-
 
 # Choose the two structures that will be overlapped
 uid = [raw_df["uid"][0], raw_df["uid"][3]]  # "Pd2Se4-12f02221b8c5", "C2-a6735a4a3797"]
@@ -45,16 +44,30 @@ strain_boundary = [[-0.3, 0.3], [-0.3, 0.3]]
 solver1.nr_epochs = 11
 
 # Calculate super cell
-super_cell = solver1.solve(cell1, cell2)
-print(super_cell.description_txt())
+super_cell1 = solver1.solve(cell1, cell2)
+print(super_cell1.description_txt())
 
 
-# Experiment with other solvers
-print("\n\nMechanicSolver:")
-solver2 = MechanicSolver()
-solver2.exploring_range = 50
-solver2.tolerance = 0.05
+# # Experiment with other solvers
+
+print("\n\nGeneticSolver:")
+solver2 = GeneticSolver()
+strain_boundary = [[-0.3, 0.3], [-0.3, 0.3]]
+solver2.model_par["subjects_in_cell"] = 2
+solver2.model_par["pins"] = 4
 
 # Calculate super cell
 super_cell2 = solver2.solve(cell1, cell2)
 print(super_cell2.description_txt())
+
+print("\n\nMechanicSolver:")
+solver3 = MechanicSolver()
+solver3.exploring_range = 50
+solver3.tolerance = 0.4
+
+# Calculate super cell
+super_cell3 = solver3.solve(cell1, cell2)
+print(super_cell3.description_txt())
+
+
+# Select a solver and modify the solver parameters
