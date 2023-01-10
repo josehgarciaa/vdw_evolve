@@ -1,8 +1,11 @@
 [build-system]
 requires = [
     "setuptools>=42",
-    "numpy",
-    "pandas",
-
+    "numpy~=1.23.5",
+    "numpy~=1.23.5",
+    "scipy~=1.9.3",
+    "wget~=1.21.3",
+    "ase~=3.22.1",
+    "pandas"
 ]
 build-backend = "setuptools.build_meta"
