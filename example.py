@@ -18,12 +18,12 @@ raw_df = raw_df[(raw_df["spacegroup"] != 'P1') & (raw_df["spacegroup"] != 'Pc') 
 print("The number of elements is:", len(list(raw_df)))
 print(raw_df[["formula", "uid"]])
 
-# Download
-# extract_structure(raw_df["uid"], save_path=structure_path)
+# Download (only first 10 for the sake of example)
+extract_structure(raw_df["uid"][:10], save_path=structure_path)
 
 
 # Choose the two structures that will be overlapped
-uid = ["Ru2F8-5b1d25d726e0", "V2F8-6d78fbe605b3"]  # "Pd2Se4-12f02221b8c5", "C2-a6735a4a3797"]
+uid = [raw_df["uid"][0], raw_df["uid"][3]]  # "Pd2Se4-12f02221b8c5", "C2-a6735a4a3797"]
 path1 = structure_path + "/" + uid[0] + ".json"
 path2 = structure_path + "/" + uid[1] + ".json"
 
@@ -36,7 +36,10 @@ cell1, cel2 = allign_along_10(cell1, cell2)
 print("=== \n cel1:\n {}".format(cell1))
 print("\n cel2:\n {}\n===".format(cell2))
 
+
 # Select a solver and modify the solver parameters
+
+print("\n\nAnnealingSolver:")
 solver1 = AnnealingSolver()
 strain_boundary = [[-0.3, 0.3], [-0.3, 0.3]]
 solver1.nr_epochs = 11
@@ -45,10 +48,12 @@ solver1.nr_epochs = 11
 super_cell = solver1.solve(cell1, cell2)
 print(super_cell.description_txt())
 
+
 # Experiment with other solvers
+print("\n\nMechanicSolver:")
 solver2 = MechanicSolver()
 solver2.exploring_range = 50
-solver2.tolerance = 0.1
+solver2.tolerance = 0.05
 
 # Calculate super cell
 super_cell2 = solver2.solve(cell1, cell2)
