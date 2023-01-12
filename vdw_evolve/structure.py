@@ -32,7 +32,7 @@ class SuperCell():
             "strain": self.strain,
             "tb": np.dot(np.linalg.inv(self.strain), self.tb),
             "diagonal_strain": self.diagonal_strain,
-            "tb_no_diagonal_strain:": np.dot(np.linalg.inv(self.diagonal_strain), self.tb)
+            "diagonal_strain_tb:": np.dot(np.linalg.inv(self.diagonal_strain), self.tb)
         }
 
         return desc
