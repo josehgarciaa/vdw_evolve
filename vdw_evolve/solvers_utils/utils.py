@@ -116,15 +116,14 @@ def rotation_10(v):
                           [np.sin(-th), np.cos(-th)]])
     return rotation
 
-def allign_along_10(cel1, cel2):
+def allign_along_10(celss):
 
+    c = []
+    for cel in celss:
+        ro = rotation_10(np.array([cel[0][0], cel[1][0]]))
+        c.append(np.dot(ro, cel))
 
-    ro1 = rotation_10(np.array([cel1[0][0], cel1[1][0]]))
-    ro2 = rotation_10(np.array([cel2[0][0], cel2[1][0]]))
-    cel1 = np.dot(ro1, cel1)
-    cel2 = np.dot(ro2, cel2)
-
-    return cel1, cel2
+    return c
 
 
 

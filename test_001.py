@@ -13,7 +13,9 @@ cell1 = np.array([[2.467, 2.467/2],[0, 2.467*np.sqrt(3)/2]])
 cell2 = np.array([[5.75,0],[0,5.92]])
 
 # Option step align the cells
-cell1, cel2 = allign_along_10(cell1, cell2)
+cells =  allign_along_10([cell1, cell2])
+cell1 = cells[0]
+cell2 = cells[1]
 print("=== \n cel1:\n {}".format(cell1))
 print("\n cel2:\n {}\n===".format(cell2))
 
