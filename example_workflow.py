@@ -42,7 +42,7 @@ print("\n cel2:\n {}\n===".format(cell2))
 
 print("\n\nAnnealingSolver:")
 solver1 = AnnealingSolver()
-strain_boundary = [[-0.3, 0.3], [-0.3, 0.3]]
+solver1.model_par["strain_boundary"] = [[-0.2, 0.2], [-0.2, 0.2]]
 solver1.nr_epochs = 11
 
 # Calculate super cell
@@ -54,7 +54,7 @@ print(super_cell1.description_txt())
 
 print("\n\nGeneticSolver:")
 solver2 = GeneticSolver()
-strain_boundary = [[-0.3, 0.3], [-0.3, 0.3]]
+solver2.model_par["strain_boundary"] = [[-0.2, 0.2], [-0.2, 0.2]]
 solver2.model_par["subjects_in_cell"] = 2
 solver2.model_par["pins"] = 4
 
