@@ -1,0 +1,5 @@
+django~=4.1
+numpy~=1.23
+wget~=3.2
+ase~=3.22
+matplotlib~=3.6
