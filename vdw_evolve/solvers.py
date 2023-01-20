@@ -30,8 +30,15 @@ class AnnealingSolver:
 
     def solve(self, cel1, cel2):
         # cel1 = np.dot(cel)
-        ta, strain_tb, t_cel2_no_strain, diagonal_strain, strain = annealing_sc(cel1, cel2, self.nr_epochs,
-                                                                                self.model_par, self.fit_f)
+        ps =True
+        while ps:
+            try:
+                ta, strain_tb, t_cel2_no_strain, diagonal_strain, strain = annealing_sc(cel1, cel2, self.nr_epochs,
+                                                                            self.model_par, self.fit_f)
+                ps=False
+            except:
+                pass
+
         sc = SuperCell(parents=(cel1, cel2), transformation=(ta, strain_tb), strains=(strain, diagonal_strain))
         return sc
 
@@ -59,8 +66,14 @@ class GeneticSolver:
 
     def solve(self, cel1, cel2):
         # cel1 = np.dot(cel)
-        ta, strain_tb, t_cel2_no_strain, diagonal_strain, strain = genetic_sc(cel1, cel2, self.nr_epochs,
+        ps = True
+        while ps:
+            try:
+                ta, strain_tb, t_cel2_no_strain, diagonal_strain, strain = genetic_sc(cel1, cel2, self.nr_epochs,
                                                                               self.model_par, self.fit_f)
+                ps = False
+            except:
+                pass
         sc = SuperCell(parents=(cel1, cel2), transformation=(ta, strain_tb), strains=(strain, diagonal_strain))
         return sc
 

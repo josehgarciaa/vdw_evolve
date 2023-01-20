@@ -134,3 +134,5 @@ def subject_test(params, cel1,cel2):
     if np.linalg.det(tB)==0:
         return False
     return True
+
+

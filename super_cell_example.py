@@ -31,7 +31,9 @@ cell1 = get_cell_from_structure_file(path1)
 cell2 = get_cell_from_structure_file(path2)
 
 # Option step align the cells
-cell1, cel2 = allign_along_10(cell1, cell2)
+aligned_cells = allign_along_10([cell1, cell2])
+cel1 = aligned_cells[0]
+cel2 = aligned_cells[1]
 print("=== \n cel1:\n {}".format(cell1))
 print("\n cel2:\n {}\n===".format(cell2))
 

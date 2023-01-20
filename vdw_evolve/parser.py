@@ -87,3 +87,29 @@ def get_cell_from_structure_file(f):
     cell = np.array([[lattice[0][0], lattice[1][0]],
                 [lattice[0][1], lattice[1][1]]])
     return cell
+
+
+def extract_molecule(xyz_path):
+    molec = open(xyz_path).read()
+    molec = molec.split()
+    nr_atoms = int(molec[0])
+    atoms = {}
+
+    for atom_n in range(0, nr_atoms):
+        atom_n = atom_n * 4 + 1
+        atom = molec[atom_n]
+        atoms[atom] = {}
+        atoms[atom]["x"] = float(molec[atom_n + 1])
+        atoms[atom]["y"] = float(molec[atom_n + 2])
+        atoms[atom]["z"] = float(molec[atom_n + 3])
+    return atoms
+
+def t_units_to_x(molec, cel):
+    a1 = np.array([cel[0,0],cel[1,0]])
+    a2 = np.array([cel[1,0],cel[1,1]])
+    new_m ={}
+    for atom in molec:
+        print(a1*molec[atom]["x"])
+        r = molec[atom]["x"]*a1 + molec[atom]["y"]*a2
+        new_m[atom]=r.T
+    return new_m

@@ -4,7 +4,6 @@ Example:
 
 """
 import numpy as np
-from numpy.linalg import inv
 from .anneling import Annealing1
 from .utils import t_cel1t_cel2, brut_strain, strained_proces
 
