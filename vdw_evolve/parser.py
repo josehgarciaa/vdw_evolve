@@ -102,9 +102,12 @@ def extract_molecule(xyz_path):
         atoms[atom]["x"] = float(molec[atom_n + 1])
         atoms[atom]["y"] = float(molec[atom_n + 2])
         atoms[atom]["z"] = float(molec[atom_n + 3])
+
     return atoms
 
 def t_units_to_x(molec, cel):
+
+    print("molec:", molec)
     a1 = np.array([cel[0,0],cel[1,0]])
     a2 = np.array([cel[1,0],cel[1,1]])
     new_m ={}
@@ -112,4 +115,6 @@ def t_units_to_x(molec, cel):
         print(a1*molec[atom]["x"])
         r = molec[atom]["x"]*a1 + molec[atom]["y"]*a2
         new_m[atom]=r.T
+        new_m[atom].append(molec[atom]["z"])  #z
+    print("new_m:", new_m)
     return new_m
