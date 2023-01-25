@@ -115,6 +115,6 @@ def t_units_to_x(molec, cel):
         print(a1*molec[atom]["x"])
         r = molec[atom]["x"]*a1 + molec[atom]["y"]*a2
         new_m[atom]=r.T
-        new_m[atom].append(molec[atom]["z"])  #z
+        new_m[atom]= np.append(new_m[atom],molec[atom]["z"])  #z
     print("new_m:", new_m)
     return new_m

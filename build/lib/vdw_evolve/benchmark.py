@@ -19,6 +19,7 @@ class SuperLattice:
         cell_atoms = {}
         for i, cell in enumerate(self.cells):
             a1s, a2s = self.get_scales(cell)
+            # print("ssl",self.lattices)
             atomic_grid = atom_grid(self.lattices[i], cell, a1s, a2s)
 
 
@@ -44,6 +45,19 @@ class SuperLattice:
 
         return a1s, a2s
 
+    def to_xyz(self, path =None):
+        xyz = str(self.nr_atoms)+"\n\n"
+        for atom in self.s_lattice:
+            xyz = xyz+ str(atom)+" "
+            v= (self.s_lattice[atom][0],self.s_lattice[atom][1])
+            x,y = t1t2(v,self.s_cell)
+            xyz = xyz + str(x)+" "+str(y)+" "+str(self.s_lattice[atom][2])+"\n"
+        if path!=None:
+            with open(path, 'w') as f:
+                f.write(xyz)
+        return xyz
+
+
 
 def atom_grid(lattice, cell_x, a1s, a2s):
     atoms = {}
@@ -56,7 +70,8 @@ def atom_grid(lattice, cell_x, a1s, a2s):
             for j in range(-a2s, a2s):
                 x = atom_x + i * cell_x.T[0][0] + j * cell_x.T[1][0]
                 y = atom_y + i * cell_x.T[0][1] + j * cell_x.T[1][1]
-                atoms[str(counter) + "_" + atom] = [x, y]
+#                 print("llla:\n",lattice[atom])
+                atoms[str(counter) + "_" + atom] = [x, y,lattice[atom][2]]
                 counter += 1
     return atoms
 
@@ -78,4 +93,11 @@ def in_cell_check(v, cell):
         return True
     else:
         return False
+
+def t1t2(v,cell):
+    c1 = cell.T[0]
+    c2 = cell.T[1]
+    t2 = (v[0] * c1[1] - v[1] * c1[0]) / (c2[0] * c1[1] - c2[1] * c1[0])
+    t1 = (v[0] - t2 * c2[0]) / c1[0]
+    return t1,t2
 

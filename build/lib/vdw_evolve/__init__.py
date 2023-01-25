@@ -7,3 +7,5 @@ from .solvers_utils import allign_along_10
 from .benchmark import SuperLattice
 
 from .pretty_prints import  plot_unit_cell_vectors
+
+from .structure import SuperCell

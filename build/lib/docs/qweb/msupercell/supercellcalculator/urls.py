@@ -8,3 +8,5 @@ urlpatterns = [
 ]
 
 # http://127.0.0.1:8000/cell_calculator/
+
+# http://127.0.0.1:8000/admin/

@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from .forms import ExperimentForm
 
 from .code_interface import run_experiment
-from .models import Experiment
+from .models import Experimentt
 
 # Create your views here.
 
@@ -37,13 +37,9 @@ def calculate(response):
                 "cel1": cel1, "cel2": cel2, "algo": algo, "strain": strain, "nr_epochs": nr_epochs,
             }
             exp_results = run_experiment(user_request)
-            print("Annealing results:\n", exp_results)
 
-            exp_results["algo"] = algo
-            exp_results["max_strain"] = strain
-            exp_results["nr_epochs"] = nr_epochs
             # save the experiment in to data base:
-            exp = Experiment(**exp_results)
+            exp = Experimentt(**exp_results)
             exp.save()
             # return the experiment results in a file
             return HttpResponse(json.dumps(exp_results), content_type="application/json")

@@ -1,5 +1,5 @@
 import numpy as np
-
+import json
 
 class SuperCell():
 
@@ -37,10 +37,21 @@ class SuperCell():
 
         return desc
 
-    def description_txt(self):
+    def description_txt(self, path=None):
         desc = self.description()
         tx = "\n=== \n "
         for k in desc:
             tx += k + " :\n" + "{}".format(desc[k]) + "\n\n"
-
+        if path!=None:
+            #json_object = json.dumps(desc, indent=4)
+            with open(path, "w") as outfile:
+                json.dump(desc, outfile, cls=NumpyEncoder)
         return tx
+
+
+# maybe you can suggest a better place for this
+class NumpyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
