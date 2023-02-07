@@ -88,22 +88,11 @@ def rectangle_fit_function(params, cel1, cel2, strain_boundary):
     t_cel1, strain_t_cel2 = t_cel1t_cel2(params, cel1, cel2)
     super_c_1 = np.dot(t_cel1, cel1)
 
-    # It's a chance that a solution with t_cel2 integer does not exist. So if the t_cel2 has float values,
-    # we will decompose it in a new t_cel2 integer and a strain(diagonal matrix), which multiply and reconstruct
-    # the initial matrix.
-    # strain = strained_proces(strain_t_cel2, strain_boundary) # not required anny more
-    t_cel2 = strain_t_cel2#np.dot(np.linalg.inv(strain), strain_t_cel2)
-
-    # area of the new cel area = det(cel1)*det(t_cel1)
-    super_cel_area = np.linalg.det(super_c_1) * np.linalg.det(super_c_1)  # minimum but bigger than 0
-
-    # keep the new cell diagonal
-    round_cost = (t_cel2[0][1]**2+t_cel2[1][0]**2)+1
 
 
     # cost for minimizing the new vectors length
     length_cost = (1+(t_cel1[0][0] ** 2 + t_cel1[0][1] ** 2) + (t_cel1[1][0] ** 2 + t_cel1[1][1] ** 2)) * 10
 
-    f =  super_c_1 + round_cost ** 3 + length_cost * 2 + (2*super_c_1[0][1]**2 +super_c_1[1][0])*100
-
+    f =  super_c_1 + length_cost * 2 + (2*super_c_1[0][1]**2 +super_c_1[1][0])*100
+    # print("da")
     return f

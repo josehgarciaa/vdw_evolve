@@ -35,8 +35,10 @@ class AnnealingSolver:
             try:
                 ta, strain_tb, t_cel2_no_strain, diagonal_strain, strain = annealing_sc(cel1, cel2, self.nr_epochs,
                                                                             self.model_par, self.fit_f)
+                print("ps:",ps)
                 ps=False
-            except:
+            except Exception as err:
+                print(f"Unexpected {err=}, {type(err)=}")
                 pass
 
         sc = SuperCell(parents=(cel1, cel2), transformation=(ta, strain_tb), strains=(strain, diagonal_strain))
