@@ -14,6 +14,6 @@ cell = allign_along_10([graphene_cell])[0]
 print("\n\nAnnealing_r_Solver:")
 solver1 = AnnealingSolver()
 solver1.fit_f = rectangle_fit_function
-solver1.nr_epochs = 5
+solver1.nr_epochs = 11
 super_cell_annealing = solver1.solve(graphene_cell, np.array([[1,0],[0,1]]))
 print(super_cell_annealing.description_txt())
