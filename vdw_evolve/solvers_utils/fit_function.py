@@ -91,9 +91,9 @@ def rectangle_fit_function(params, cel1, cel2, strain_boundary):
 
 
     # cost for minimizing the new vectors length
-    length_cost = (1+(t_cel1[0][0] ** 2 + t_cel1[0][1] ** 2) + (t_cel1[1][0] ** 2 + t_cel1[1][1] ** 2)) * 100
+    length_cost = (1+(t_cel1[0][0] ** 2 + t_cel1[0][1] ** 2) + (t_cel1[1][0] ** 2 + t_cel1[1][1] ** 2)) 
 
-    f =  (1+super_c_1[0][1]**2 +super_c_1[1][0]**2)**5*100 + length_cost * 2 + (2*super_c_1[0][1]**2 +super_c_1[1][0])*100
+    f =  (1+super_c_1[0][1]**2 +super_c_1[1][0]**2)**5*100 + length_cost * 2 #+ (2*super_c_1[0][1]**2 +super_c_1[1][0]*)*100
     # print("da")
 
     # print(f)
