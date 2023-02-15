@@ -18,7 +18,7 @@ print("The number of elements is:", len(list(raw_df)))
 print(raw_df[["formula", "uid"]])
 
 # Download (only first 10 for the sake of example)
-extract_structure(raw_df["uid"][:10], save_path=structure_path)
+extract_structure(raw_df["uid"][:100], save_path=structure_path)#TODO: take just first 100
 
 # Choose the two structures that will be overlapped
 
