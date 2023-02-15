@@ -1,5 +1,5 @@
 from vdw_evolve import get_data_as_pd, extract_structure, get_cell_from_structure_file  # vdw.parser
-from vdw_evolve import AnnealingSolver, MechanicSolver, GeneticSolver  # vdw.solvers
+from vdw_evolve import AnnealingSolver, MechanicSolver, GeneticSolver, SuperMatcher  # vdw.solvers
 from vdw_evolve import allign_along_10  # vdw.solvers_utils
 
 # Download data:
@@ -40,36 +40,44 @@ print("\n cel2:\n {}\n===".format(cell2))
 
 # Select a solver and modify the solver parameters
 
-print("\n\nAnnealingSolver:")
-solver1 = AnnealingSolver()
-solver1.model_par["strain_boundary"] = [[-0.2, 0.2], [-0.2, 0.2]]
-solver1.nr_epochs = 11
+
+print("\n\nSuperSolver:")
+solver0 = SuperMatcher()
 
 # Calculate super cell
-super_cell1 = solver1.solve(cell1, cell2)
-print(super_cell1.description_txt())
+super_cell0 = solver0.solve(cell1, cell2)
+print(super_cell0.description_txt())
 
-
-# # Experiment with other solvers
-
-print("\n\nGeneticSolver:")
-solver2 = GeneticSolver()
-solver2.model_par["strain_boundary"] = [[-0.2, 0.2], [-0.2, 0.2]]
-solver2.model_par["subjects_in_cell"] = 2
-solver2.model_par["pins"] = 4
-
-# Calculate super cell
-super_cell2 = solver2.solve(cell1, cell2)
-print(super_cell2.description_txt())
-
-print("\n\nMechanicSolver:")
-solver3 = MechanicSolver()
-solver3.exploring_range = 50
-solver3.tolerance = 0.4
-
-# Calculate super cell
-super_cell3 = solver3.solve(cell1, cell2)
-print(super_cell3.description_txt())
+# print("\n\nAnnealingSolver:")
+# solver1 = AnnealingSolver()
+# solver1.model_par["strain_boundary"] = [[-0.2, 0.2], [-0.2, 0.2]]
+# solver1.nr_epochs = 11
+#
+# # Calculate super cell
+# super_cell1 = solver1.solve(cell1, cell2)
+# print(super_cell1.description_txt())
+#
+#
+# # # Experiment with other solvers
+#
+# print("\n\nGeneticSolver:")
+# solver2 = GeneticSolver()
+# solver2.model_par["strain_boundary"] = [[-0.2, 0.2], [-0.2, 0.2]]
+# solver2.model_par["subjects_in_cell"] = 2
+# solver2.model_par["pins"] = 4
+#
+# # Calculate super cell
+# super_cell2 = solver2.solve(cell1, cell2)
+# print(super_cell2.description_txt())
+#
+# print("\n\nMechanicSolver:")
+# solver3 = MechanicSolver()
+# solver3.exploring_range = 50
+# solver3.tolerance = 0.4
+#
+# # Calculate super cell
+# super_cell3 = solver3.solve(cell1, cell2)
+# print(super_cell3.description_txt())
 
 
 # Select a solver and modify the solver parameters

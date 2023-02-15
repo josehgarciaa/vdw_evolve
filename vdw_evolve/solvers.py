@@ -2,9 +2,11 @@
 
 """
 
-from .solvers_utils import annealing_sc, mechanic_sc, genetic_sc
-from .solvers_utils.fit_function import base_fit_function
+import numpy as np
+import scipy as sp
 
+from .solvers_utils import annealing_sc, mechanic_sc, genetic_sc, LatMatch
+from .solvers_utils.fit_function import base_fit_function
 from .structure import SuperCell
 
 
@@ -30,19 +32,71 @@ class AnnealingSolver:
 
     def solve(self, cel1, cel2):
         # cel1 = np.dot(cel)
-        ps =True
+        ps = True
         while ps:
             try:
                 ta, strain_tb, t_cel2_no_strain, diagonal_strain, strain = annealing_sc(cel1, cel2, self.nr_epochs,
-                                                                            self.model_par, self.fit_f)
-                print("ps:",ps)
-                ps=False
+                                                                                        self.model_par, self.fit_f)
+                # print("ps:", ps)
+                ps = False
             except Exception as err:
                 print(f"Unexpected {err=}, {type(err)=}")
                 pass
 
         sc = SuperCell(parents=(cel1, cel2), transformation=(ta, strain_tb), strains=(strain, diagonal_strain))
         return sc
+
+
+class SuperMatcher:
+    opt_angle = True
+    opt_strain = True
+    # theta_min= 15*np.pi/180;
+    theta_min = 5 * np.pi / 180
+    theta_range = (-np.pi / 2, np.pi / 2)
+    smax = [0.05, 0.05]
+    bounds = None
+    result = None
+
+    def __init__(self, scdim = [5,5], optimize_angle=True, optimize_strain=True):
+        self.dim = scdim
+        self.updated_target_cell = None
+        self.sc_vec = None
+        self.opt_angle = optimize_angle
+        self.opt_strain = optimize_strain
+
+
+
+    def solve(self, cel1, cel2, ch =False):
+        # Todo: Please check!!:
+        matcher1=LatMatch(scdim=self.dim, reference=cel1, target=cel2, optimize_strain=self.opt_strain,optimize_angle=self.opt_angle);
+        sc_vec = matcher1.supercell().T
+        print(sc_vec)
+        oBlat = sc_vec#matcher1.updatedCell()
+        print("\n",oBlat)
+
+        result= matcher1.Result() # S1 S2 Theta
+        s1=result[0]
+        s2=result[1]
+        theta=result[2]
+
+        r = np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
+        strain = np.diag([1 + s1, 1 + s2])
+
+        diagonal_strain = strain
+
+        ta= np.dot(oBlat, np.linalg.inv(cel1))
+        strain_tb= np.dot(matcher1.updatedCell(), np.linalg.inv(cel2))
+
+        # strain_tb = strain @ r
+        #oBlat = Ta*cel1= TB*cel2
+
+        sc = SuperCell(parents=(cel1, cel2), transformation=(ta, strain_tb), strains=(strain, diagonal_strain))
+        if ch:
+            return sc, s1,s2,theta
+        return sc
+
+
+
 
 
 class GeneticSolver:
@@ -72,7 +126,7 @@ class GeneticSolver:
         while ps:
             try:
                 ta, strain_tb, t_cel2_no_strain, diagonal_strain, strain = genetic_sc(cel1, cel2, self.nr_epochs,
-                                                                              self.model_par, self.fit_f)
+                                                                                      self.model_par, self.fit_f)
                 ps = False
             except:
                 pass

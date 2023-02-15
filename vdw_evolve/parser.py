@@ -82,11 +82,42 @@ def get_lattice_from_structure_file(f):
     return lattice
 
 
-def get_cell_from_structure_file(f):
+
+
+
+def get_cell_from_structure_file(f, xyz=False):
     lattice = get_lattice_from_structure_file(f)
     cell = np.array([[lattice[0][0], lattice[1][0]],
-                [lattice[0][1], lattice[1][1]]])
-    return cell
+                     [lattice[0][1], lattice[1][1]]])
+    if xyz == False:
+        return cell
+
+    xyz_data= get_atoms_from_structure_file(f)
+    return cell, xyz_data
+
+
+def get_atoms_from_structure_file(f):
+    """
+
+    :param f: "path/to/the/json/sith/structure"
+    :return:
+    """
+    with open(f, 'r') as file:
+        json_data = json.load(file)
+    my_type = "__ndarray__"
+    # print(json_data)
+    positions = json_data['1']["positions"]['__ndarray__']
+    positions = np.reshape(np.array(positions[2]), positions[0])
+    type = json_data['1']["numbers"]['__ndarray__']
+    type = np.reshape(np.array(type[2]), type[0])
+
+    atoms = []
+    for i, atom_n in enumerate(type):
+        atom = [atom_n,[positions[i][0],positions[i][1],positions[i][2]]]
+        atoms.append(atom)
+
+
+    return atoms
 
 
 def extract_molecule(xyz_path):
@@ -107,14 +138,14 @@ def extract_molecule(xyz_path):
 
 def t_units_to_x(molec, cel):
 
-    print("molec:", molec)
+    # print("molec:", molec)
     a1 = np.array([cel[0,0],cel[1,0]])
     a2 = np.array([cel[1,0],cel[1,1]])
     new_m ={}
     for atom in molec:
-        print(a1*molec[atom]["x"])
+        # print(a1*molec[atom]["x"])
         r = molec[atom]["x"]*a1 + molec[atom]["y"]*a2
         new_m[atom]=r.T
         new_m[atom]= np.append(new_m[atom],molec[atom]["z"])  #z
-    print("new_m:", new_m)
+    # print("new_m:", new_m)
     return new_m
