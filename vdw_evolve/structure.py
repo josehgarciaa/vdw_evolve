@@ -25,7 +25,59 @@ class Structure():
         """
         self.cell = None
         self.atoms = None
+    
+    def transform2D(self, strain=1, angle=0):
+        """
+            Attributes
+            ----------
+            strain: float or 3-tuple of float, optional
+                The strain in percentile applied to the system.
+                When scalar uniform strain will be applied to all axis
+                When tuple, each value will be apply to an axis
+            angle: float, optional
+                The rotation angle along the z direction
+        """
+        try:
+            if isinstance(strain, (int, float)):
+                StrMat = np.eye(2, cdtype=float)*strain
+            StrMat = np.diag(1.0 + np.array(strain)/100.0)
+        except ValueError:
+            print("Could not properly parse the strain parameters to a  matrix")
+            StrMat = None
 
+        RotMat = [[np.cos(angle), -np.sin(angle)],
+                  [np.sin(angle), np.cos(angle)]]
+        try:
+            RotMat = np.array(RotMat, dtype=float)
+        except ValueError:
+            print("Could not properly parse the angle into a Rot matrix")
+            RotMat = None
+        TrMat = StrMat@RotMat
+        self.cell = list(TrMat@self.cell)
+        self.atoms = [(s, list(TrMat@p)) for s, p in self.atoms];
+        return self
+
+    def rotate2D(self, angle):
+        """
+            Attributes
+            ----------
+            angle: float
+                The rotation angle along the z direction
+        """
+        return self.transform(angle)
+
+    def strain2D(self, strain):
+        """
+            Attributes
+            ----------
+            strain: float or 3-tuple of float, optional
+                The strain in percentile applied to the system.
+                When scalar uniform strain will be applied to all axis
+                When tuple, each value will be apply to an axis
+        """
+        return self.transform(strain)
+    
+    
     def read_from(self, input_file, format):
         """
             Attributes
@@ -37,7 +89,7 @@ class Structure():
         """
         if format == "c2db-xyz":
             try:
-                # A temporal functio to format a line
+                # A temporal function to format a line
                 def _format(line):
                     s, x, y, z = [x for x in line.split(" ") if x != ""][:4]
                     return (s, [float(x), float(y), float(z)])
@@ -49,11 +101,46 @@ class Structure():
                     lat = lat.split(" ")
                     lat = np.array(list(map(float, lat))).reshape(3, 3)
                     xyz = [_format(line) for line in f]
-                    self.cell = lat
+                    self.cell = np.transpose(lat)
                     self.atoms = xyz
             except ValueError:
                 print("Could not properly parse input_file")
         return self
+
+    def write_to(self, output_filename, format):
+        """
+            Attributes
+            ----------
+            output_file: string
+                The location of the output file to be written.
+            format: string
+                The format of the output file
+        """
+        if format == "c2db-xyz":
+            try:
+                npoints = len(self.atoms)
+                with open(output_filename, "w") as f:
+                    xyz_out = str(npoints)+"\n"
+                    xyz_out += "Lattice=\""
+                    for lat in (self.cell).T:
+                        xyz_out += "{} {} {} ".format(*lat)
+                    xyz_out = xyz_out[:-1] + "\""  # The-1 remove the last space and replace
+                    xyz_out += "Properties=Generated from vdw_evolve. No other property here\n"  
+                    for sym, pos in self.atoms:
+                        xyz_out += "{} {} {} {}\n".format(sym, *pos)
+                    f.write(xyz_out)
+            except ValueError:
+                print("Could not properly parse data to the output format")
+        return self
+
+
+        
+
+
+    
+
+
+
 
 
 class SuperCell():
