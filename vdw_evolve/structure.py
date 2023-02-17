@@ -26,7 +26,7 @@ class Structure():
         self.cell = None
         self.atoms = None
     
-    def transform2D(self, strain=1, angle=0):
+    def transform2D(self, strain=0, angle=0):
         """
             Attributes
             ----------
@@ -38,9 +38,12 @@ class Structure():
                 The rotation angle along the z direction
         """
         try:
+            one = np.eye(2, dtype=float)
             if isinstance(strain, (int, float)):
-                StrMat = np.eye(2, cdtype=float)*strain
-            StrMat = np.diag(1.0 + np.array(strain)/100.0)
+                StrMat = one*strain
+            else:
+                StrMat = np.diag(strain)
+            StrMat = one+StrMat/100.0
         except ValueError:
             print("Could not properly parse the strain parameters to a  matrix")
             StrMat = None
@@ -52,19 +55,25 @@ class Structure():
         except ValueError:
             print("Could not properly parse the angle into a Rot matrix")
             RotMat = None
-        TrMat = StrMat@RotMat
-        self.cell = list(TrMat@self.cell)
-        self.atoms = [(s, list(TrMat@p)) for s, p in self.atoms];
+
+        TrMat = np.eye(3)
+        TrMat[:2, :2] = StrMat@RotMat
+        self.cell = TrMat@(self.cell)
+        self.atoms = [(s, TrMat@p) for s, p in self.atoms]
         return self
 
-    def rotate2D(self, angle):
+    def rotate2D(self, angle, format="deg"):
         """
             Attributes
             ----------
             angle: float
                 The rotation angle along the z direction
+            format: str
+                The angle format, can be either deg (degrees) or rad (radians)
         """
-        return self.transform(angle)
+        if format == "deg":
+            angle = angle*np.pi/180.0
+        return self.transform2D(angle=angle)
 
     def strain2D(self, strain):
         """
@@ -75,9 +84,8 @@ class Structure():
                 When scalar uniform strain will be applied to all axis
                 When tuple, each value will be apply to an axis
         """
-        return self.transform(strain)
-    
-    
+        return self.transform2D(strain=strain)
+
     def read_from(self, input_file, format):
         """
             Attributes
@@ -92,7 +100,7 @@ class Structure():
                 # A temporal function to format a line
                 def _format(line):
                     s, x, y, z = [x for x in line.split(" ") if x != ""][:4]
-                    return (s, [float(x), float(y), float(z)])
+                    return (s, np.array([float(x), float(y), float(z)]))
 
                 with open(input_file) as f:
                     npoints = int(f.readline())

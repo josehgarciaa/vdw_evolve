@@ -3,10 +3,7 @@ import vdw_evolve as lt
 
 # Read Structure files
 str1 = lt.Structure().read_from("C2_0deg.xyz", format="c2db-xyz")
-str2 = str1.write_to("C2_45deg.xyz", format="c2db-xyz")
-
-#str1 = lt.Structure().read_from("C2_0deg.xyz", format="c2db-xyz")
-#str2 = lt.Structure().read_from("C2_45deg.xyz", format="c2db-xyz")
+str2 = lt.Structure().read_from("C2_45deg.xyz", format="c2db-xyz")
 
 #Optimize using a single core
 #vdw_str = Optimize( str1, str2, opt_strain=False, opt_angle=True, ncores=1);
