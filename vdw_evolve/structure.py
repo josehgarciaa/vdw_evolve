@@ -1,6 +1,43 @@
 import numpy as np
 import json
 
+
+class Structure():
+    """
+    Structural information of a material
+
+    Methods
+    -------
+
+    """
+    def __init__(self, cell=None, atoms=None, periodic=(True, True)):
+        """
+        Attributes
+        ----------
+
+        periodic : bool or tuple of bool, optional
+            Whereas it is periodic or not along its lattice vectors.
+        cell: an 3x3 array of float, optional
+        Defining the lattice vectors as columns
+        atoms: a list of tuples, optional
+        Containing as first element the
+        atom type and their posittion in 3D space.
+        """
+        self.cell = None
+        self.atoms = None
+
+    def read_from(self, input_file, format):
+        """
+        Attributes
+        ----------
+        input_file: string  
+            The location of the input file to be read.
+        format: string
+            The format of the input file
+       """
+        return self
+
+
 class SuperCell():
 
     def __init__(self, parents, transformation, strains):

@@ -1,3 +1,6 @@
 {
-    "esbonio.sphinx.confDir": ""
+    "esbonio.sphinx.confDir": "",
+    "python.linting.pydocstyleEnabled": false,
+    "python.linting.enabled": true,
+    "python.linting.pycodestyleEnabled": true
 }
