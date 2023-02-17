@@ -28,13 +28,31 @@ class Structure():
 
     def read_from(self, input_file, format):
         """
-        Attributes
-        ----------
-        input_file: string  
-            The location of the input file to be read.
-        format: string
-            The format of the input file
-       """
+            Attributes
+            ----------
+            input_file: string  
+                The location of the input file to be read.
+            format: string
+                The format of the input file
+        """
+        if format == "c2db-xyz":
+            try:
+                # A temporal functio to format a line
+                def _format(line):
+                    s, x, y, z = [x for x in line.split(" ") if x != ""][:4]
+                    return (s, [float(x), float(y), float(z)])
+
+                with open(input_file) as f:
+                    npoints = int(f.readline())
+                    lat = f.readline()
+                    lat = lat[lat.find("\"")+1:lat.find("Properties")-2]
+                    lat = lat.split(" ")
+                    lat = np.array(list(map(float, lat))).reshape(3, 3)
+                    xyz = [_format(line) for line in f]
+                    self.cell = lat
+                    self.atoms = xyz
+            except ValueError:
+                print("Could not properly parse input_file")
         return self
 
 
