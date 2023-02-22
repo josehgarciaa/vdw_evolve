@@ -5,8 +5,8 @@ import vdw_evolve as lt
 str1 = lt.Structure().read_from("C2_0deg.xyz", format="c2db-xyz")
 str2 = lt.Structure().read_from("C2_45deg.xyz", format="c2db-xyz")
 
-#Optimize using a single core
-#vdw_str = Optimize( str1, str2, opt_strain=False, opt_angle=True, ncores=1);
+# Optimize using a single core
+vdw_str = lt.VdWStack( str1, str2, opt_strain=False, opt_angle=True, ncores=1);
 #vdw_str.write("vdw_optimal.xyz");
 #vdw_str.write("vdw_optimal.json");
 
