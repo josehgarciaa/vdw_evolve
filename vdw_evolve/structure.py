@@ -1,7 +1,5 @@
 import numpy as np
-from numpy.linalg import norm
 import json
-import geometry as geo
 
 
 class Structure():
@@ -27,19 +25,6 @@ class Structure():
         """
         self.cell = None
         self.atoms = None
-
-    def supercell_points(self, dims):
-        """The set of allowed cell points in a supercell defined by dims
-
-            Attributes
-            ----------
-            dims: 2-tuple of ints
-                The number of repeated unit cells along the cell vectors
-                that defines the supercell.
-        """       
-        nx, ny = dims
-        grid = np.mgrid[-nx:nx, -ny:ny].T.reshape(nx * 2 * ny * 2, 2).T
-        return (self.cell) @ grid
     
     def transform2D(self, strain=0, angle=0):
         """
@@ -155,71 +140,18 @@ class Structure():
             except ValueError:
                 print("Could not properly parse data to the output format")
         return self
+
+
+        
+
+
     
-    def get_cell(self):
-        """
-            Return
-            -------
-            The lattice vectors as the columns of a square matrix.
-
-        """
-        return self.cell
-
-
-class VdWStructure(Structure):
-
-    def __init__(self, host, complement, supercell=False):
-        """
-        Attributes
-        ----------
-
-        host : Structure
-            The substrate or inmutable lattice that wont be modified
-            throught stacking.
-        complement : Structure
-            The lattice which will be placed on the substrate and adapt to it,
-            through by strain and twisting.
-        supercell: bool
-            If true, the optimal periodic supercell between host and complement will be computed. 
-        """
-        self.host = host
-        self.complement = complement
-
-    def get_cell(self, tol=1e-2):
-        """ The lattice vectors as the columns of a square matrix.
-        
-        Note
-        -----
-        When the van der Waal supercell is not yet constructed returns none 
-        """
-        return None
-
-    def supercell_points(self, dims, tol=1e-2):
-        """ Lattice points compatible with the host and the compoment
-        
-        Attributes
-        ----------
-
-        dims: 2-tuple of ints
-            The number of repeated unit cells along the cell vectors
-            that defines the supercell.
-        tol : float
-            The allowed tolerance to consider a point beloning to both lattices
-
-        Note
-        -------
-        When no points exist, returns none
-        """
-        
-        host, comp = self.host, self.complement
-        comp_points = self.complement.supercell_points(dims)
-        CinH = geo.ChangeBasis(comp_points, host.cell)
-        return comp_points[:, norm(np.round(CinH) - CinH, axis=0) < tol]
 
 
 
 
-class _SuperCell():
+
+class SuperCell():
 
     def __init__(self, parents, transformation, strains):
         """
