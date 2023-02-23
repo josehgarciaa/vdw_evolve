@@ -2,63 +2,6 @@
 import numpy as np
 from scipy import optimize
 
-def ChangeBasis(r, target, ref=np.eye(2)):
-    """ Changes the basis of the r vectors from A to B.
-
-      The matrices A and B contain the basis elements in a common basis.
-      The vectors r are assumend in the basis A basis, i.e:
-
-      $\vec{r}_i = \alpha_1 \vec{a}_1 + \alpha_2 \vec{a}_2$
-
-      The goal is to found the coefficients $(\beta_1,\beta_2)$, such that
-
-      $\vec{r}_i = \beta_1 \vec{b}_1 + \beta_2 \vec{b}_2$.
-
-      By taking the dot product of $\vec{r}_i$ agains $\vec{b}_j$, we found
-      the following system of equations
-
-      $\vec{b}_i\cdot\vec{b}_j \beta_i = \vec{b}_i\cdot\vec{a}_j \alpha_j$.
-
-      Therefore, the matrix $U_{ij} = \vec{b}_i\cdot\vec{a}_j$ is the change of
-      basis matrix
-    """
-    A, B = ref, target
-    r = np.array(r)
-    U = np.linalg.inv(B.T @ B).dot(B.T @ A)
-    return U @ r
-
-
-# Strain and Rotation
-def R(theta):
-    return np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
-
-
-def S(s1, s2):
-    return np.diag([1 + s1, 1 + s2])
-
-
-def SR(s1, s2, theta):
-    return S(s1, s2) @ R(theta)
-
-
-def get_supercell_vectors(dims, ref, target, tol=1e-2):
-    """
-    Received a set of points x in the reference lattice basis and returns those
-    that are close to the reference lattice points given a tolerance tol.
-    """
-    B, A = ref, target;
-    Bpoints = supercell_points(dims, B)  # This points are in cartesians
-    rBinA = ChangeBasis(Bpoints, A)  # Map from cartesian to Alat coordinates
-    return Bpoints[:, np.linalg.norm(np.round(rBinA) - rBinA, axis=0) < tol]
-
-
-def supercell_points(dims, lat_vec, fractional=False):
-    nx, ny = dims
-    grid = np.mgrid[-nx:nx, -ny:ny].T.reshape(nx * 2 * ny * 2, 2).T
-    if fractional:
-        return grid
-    return lat_vec @ grid
-
 
 class LatMatch:
     opt_angle = True
