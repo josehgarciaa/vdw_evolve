@@ -1,20 +1,18 @@
 import numpy as np
+from numpy.linalg import norm
 import json
-
-
+from .geometry import ChangeBasis
+#from .lat_matcher import LatMatch
 class Structure():
     """
     Structural information of a material
-
     Methods
     -------
-
     """
     def __init__(self, cell=None, atoms=None, periodic=(True, True)):
         """
         Attributes
         ----------
-
         periodic : bool or tuple of bool, optional
             Whereas it is periodic or not along its lattice vectors.
         cell: an 3x3 array of float, optional
@@ -25,6 +23,18 @@ class Structure():
         """
         self.cell = None
         self.atoms = None
+
+    def supercell_points(self, dims):
+        """The set of allowed cell points in a supercell defined by dims
+            Attributes
+            ----------
+            dims: 2-tuple of ints
+                The number of repeated unit cells along the cell vectors
+                that defines the supercell.
+        """       
+        nx, ny = dims
+        grid = np.mgrid[-nx:nx+1, -ny:ny+1, 0:1].T.reshape((nx*2+1)*(ny*2+1), 3).T
+        return (self.cell) @ grid
     
     def transform2D(self, strain=0, angle=0):
         """
@@ -140,14 +150,68 @@ class Structure():
             except ValueError:
                 print("Could not properly parse data to the output format")
         return self
-
-
-        
-
-
     
+    def get_cell(self):
+        """
+            Return
+            -------
+            The lattice vectors as the columns of a square matrix.
+        """
+        return self.cell
 
 
+class VdWStructure(Structure):
+
+    def __init__(self, host, complement, supercell=False):
+        """
+        Attributes
+        ----------
+        host : Structure
+            The substrate or inmutable lattice that wont be modified
+            throught stacking.
+        complement : Structure
+            The lattice which will be placed on the substrate and adapt to it,
+            through by strain and twisting.
+        supercell: bool
+            If true, the optimal periodic supercell between host and complement will be computed. 
+        """
+        self.host = host
+        self.complement = complement
+
+    def get_cell(self, tol=1e-2):
+        """ The lattice vectors as the columns of a square matrix.
+        
+        Note
+        -----
+        When the van der Waal supercell is not yet constructed returns none 
+        """
+        return None
+
+    def supercell_points(self, dims, tol=1e-2):
+        """ Lattice points compatible with the host and the compoment
+        
+        Attributes
+        ----------
+        dims: 2-tuple of ints
+            The number of repeated unit cells along the cell vectors
+            that defines the supercell.
+        tol : float
+            The allowed tolerance to consider a point beloning to both lattices
+        Note
+        -------
+        When no points exist, returns none
+        """
+        
+        host, comp = self.host, self.complement
+        comp_points = self.complement.supercell_points(dims)
+        CinH = ChangeBasis(comp_points,host.cell)
+        return comp_points[:, norm(np.round(CinH) - CinH, axis=0) < tol]
+
+    def get_minimalcell(self, dims, tol=1e-2):
+        """ """
+        #lm = LatMatch(self, scdim, reference, target, optimize_angle=True, optimize_strain=True):
+        
+        return none
 
 
 
@@ -155,11 +219,9 @@ class SuperCell():
 
     def __init__(self, parents, transformation, strains):
         """
-
         :param parents: (np.array[],np.array[]) (cel1,cel2)
         :param transformation:(np.array[],np.array[]) (ta,tb)
         :param strains:(np.array[],np.array[]) (strain,diag_strain)
-
         TA*cel1-TB*cel2 = 0
         super_cell = TA*cel1
         TB=strain*TB_unstrain

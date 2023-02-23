@@ -2,19 +2,19 @@ import numpy as np
 from scipy import optimize
 
 
-def ChangeBasis(r, A, B=np.eye(2)):
+def ChangeBasis(r, B, A=np.eye(3)):
     """ Changes r from their canonical basis A to a target basis B.
 
         Parameters
         ----------
         r : array_like
             A two-dimensional vector expressed in the A basis.
-        A : matrix_like
-            The basis of r.
-        B : matrix_like, optional.
+        B : matrix_like.
             The target basis in which r will be expressed. 
             If B is the identity, r 
             will be expressed in the coordinates defining A
+        A : matrix_like, optional
+            The basis of r.
         
         Return
         ----------
@@ -38,8 +38,6 @@ def ChangeBasis(r, A, B=np.eye(2)):
         $\vec{b}_i\cdot\vec{b}_j \beta_i = \vec{b}_i\cdot\vec{a}_j \alpha_j$.
         which defines change of basis matrix $U_{ij} = \vec{b}_i\cdot\vec{a}_j$
     """
-    
-    A, B = ref, target
     r = np.array(r)
     U = np.linalg.inv(B.T @ B).dot(B.T @ A)
     return U @ r

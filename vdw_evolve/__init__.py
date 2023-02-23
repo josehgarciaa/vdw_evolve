@@ -10,3 +10,4 @@ from .pretty_prints import  plot_unit_cell_vectors
 
 from .structure import SuperCell
 from .structure import Structure
+from .structure import VdWStructure
