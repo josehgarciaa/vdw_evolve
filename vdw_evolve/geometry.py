@@ -43,33 +43,45 @@ def ChangeBasis(r, B, A=np.eye(3)):
     return U @ r
 
 
-# Strain and Rotation
-def R(theta):
-    return np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
+def MinimalBasis(self, vector_list, alpha=0.5, min_area=1e-7):
+    """ Extract a minimal basis out of a list of vectors.
 
-
-def S(s1, s2):
-    return np.diag([1 + s1, 1 + s2])
-
-
-def SR(s1, s2, theta):
-    return S(s1, s2) @ R(theta)
-
-
-def get_supercell_vectors(dims, ref, target, tol=1e-2):
+        Parameters
+        ----------
+        vector_list : array_like
+            The list of potential vectors to construct the basis.
+        alpha : float, default.
+            Decided whereas to construct the basis based on its area (alpha=0)
+            or on the norm of its lattices vectors (alpha=1). 
+            The default is 0.5 which balance both
+        min_area : float, optional
+            Define the minimal area you'll accept for your supercell.
+        
+        Return
+        ----------
+        rt : array_like
+            a list of two vectors that forms a basis. Or none if nothing.
     """
-    Received a set of points x in the reference lattice basis and returns those
-    that are close to the reference lattice points given a tolerance tol.
-    """
-    B, A = ref, target;
-    Bpoints = supercell_points(dims, B)  # This points are in cartesians
-    rBinA = ChangeBasis(Bpoints, A)  # Map from cartesian to Alat coordinates
-    return Bpoints[:, np.linalg.norm(np.round(rBinA) - rBinA, axis=0) < tol]
 
+    V = vector_list
 
-def supercell_points(dims, lat_vec, fractional=False):
-    nx, ny = dims
-    grid = np.mgrid[-nx:nx, -ny:ny].T.reshape(nx * 2 * ny * 2, 2).T
-    if fractional:
-        return grid
-    return lat_vec @ grid
+    basis = []
+    cost = np.inf
+    for i in range(len(V)):
+        v, ws = V[i], V[i+1:]
+        areas = np.abs(np.cross([v], ws))
+        ws = ws[areas > min_area]
+        areas = areas[areas > min_area]
+    
+        if len(ws) != 0:
+            norms = np.linalg.norm(ws, axis=1)
+            costs = (1-alpha)*areas + alpha*norms
+            min_cost = np.min(costs)
+            if min_cost < cost:
+                basis = (v, ws[np.argmin(costs)])
+                cost = min_cost
+    
+    if len(basis) == 0:
+        return None
+    
+    return np.array(basis)
