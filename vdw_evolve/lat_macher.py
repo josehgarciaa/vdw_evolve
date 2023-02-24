@@ -1,6 +1,7 @@
 
 import numpy as np
 from scipy import optimize
+from .geometry import ChangeBasis, MinimalBasis
 
 
 class LatMatch:

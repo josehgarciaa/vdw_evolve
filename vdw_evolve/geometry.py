@@ -43,13 +43,13 @@ def ChangeBasis(r, B, A=np.eye(3)):
     return U @ r
 
 
-def MinimalBasis(self, vector_list, alpha=0.5, min_area=1e-7):
+def MinimalBasis(vector_list, alpha=0.5, min_area=1e-7):
     """ Extract a minimal basis out of a list of vectors.
 
         Parameters
         ----------
         vector_list : array_like
-            The list of potential vectors to construct the basis.
+            The list of potential vectors to construct the basis in column form.
         alpha : float, default.
             Decided whereas to construct the basis based on its area (alpha=0)
             or on the norm of its lattices vectors (alpha=1). 
@@ -62,26 +62,25 @@ def MinimalBasis(self, vector_list, alpha=0.5, min_area=1e-7):
         rt : array_like
             a list of two vectors that forms a basis. Or none if nothing.
     """
-
-    V = vector_list
-
+    
+    V = np.transpose(vector_list)
     basis = []
     cost = np.inf
     for i in range(len(V)):
         v, ws = V[i], V[i+1:]
-        areas = np.abs(np.cross([v], ws))
+        areas = np.abs(np.cross([v[:2]], ws[:, :2]))
         ws = ws[areas > min_area]
         areas = areas[areas > min_area]
     
         if len(ws) != 0:
-            norms = np.linalg.norm(ws, axis=1)
-            costs = (1-alpha)*areas + alpha*norms
-            min_cost = np.min(costs)
+            norms = np.linalg.norm(ws[:, :2], axis=1)
+            cur_costs = (1-alpha)*areas + alpha*norms
+            min_cost = np.min(cur_costs)
             if min_cost < cost:
-                basis = (v, ws[np.argmin(costs)])
+                basis = (v, ws[np.argmin(cur_costs)],[0,0,1])
                 cost = min_cost
     
     if len(basis) == 0:
         return None
     
-    return np.array(basis)
+    return np.transpose(basis)

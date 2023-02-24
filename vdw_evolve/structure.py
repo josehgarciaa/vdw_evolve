@@ -2,7 +2,7 @@ import numpy as np
 from numpy.linalg import norm
 import json
 from .geometry import ChangeBasis
-#from .lat_matcher import LatMatch
+from .lat_matcher import LatMatch
 class Structure():
     """
     Structural information of a material
@@ -187,7 +187,7 @@ class VdWStructure(Structure):
         """
         return None
 
-    def supercell_points(self, dims=(1000,1000), tol=1e-3):
+    def supercell_points(self, dims=(300, 300), tol=1e-3):
         """ Lattice points compatible with the host and the compoment
         
         Attributes
@@ -200,6 +200,11 @@ class VdWStructure(Structure):
         Note
         -------
         When no points exist, returns none
+        
+        TODO
+        -----
+        The tolerance should be better addressed
+        
         """
         
         host, comp = self.host, self.complement
@@ -207,11 +212,16 @@ class VdWStructure(Structure):
         CinH = ChangeBasis(comp_points,host.cell)
         return comp_points[:, norm(np.round(CinH) - CinH, axis=0) < tol]
 
-    def get_minimalcell(self, dims, tol=1e-2):
+    def get_minimalcell(self, dims, tol=1e-2, optimize_angle=True, optimize_strain=True):
         """ """
-        #lm = LatMatch(self, scdim, reference, target, optimize_angle=True, optimize_strain=True):
+        lm = LatMatch(  dims, self.host, self.complement,
+                        optimize_angle =optimize_angle,
+                        optimize_strain =optimize_strain 
+                    )
         
-        return none
+        return lm.supercell()
+        
+        return None
 
 
 
