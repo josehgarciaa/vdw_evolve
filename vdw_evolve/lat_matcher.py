@@ -2,69 +2,68 @@
 import numpy as np
 from scipy import optimize
 from .geometry import ChangeBasis, MinimalBasis
-
+import copy
 
 class LatMatch:
     opt_angle = True
     opt_strain = True
-    # theta_min= 15*np.pi/180;
-    theta_min = 5 * np.pi / 180
-    theta_range = (-np.pi / 2, np.pi / 2)
+    uni_strain = False
+    angle_range = (-np.pi / 2, np.pi / 2)
     smax = [0.05, 0.05]
     bounds = None
     result = None
 
-    def __init__(self, scdim, reference, target, optimize_angle=True, optimize_strain=True):
-        self.ref = reference
-        self.tar = target
-        self.dim = scdim
+    def __init__(self, optimize_angle=True, optimize_strain=True):
+        self.ref = None
+        self.tar = None
+        self.opt = None
+        self.dim = None
         self.updated_target_cell = None
         self.sc_vec = None
         self.opt_angle = optimize_angle
         self.opt_strain = optimize_strain
 
-    def setMaxStrain(self, s):
-        try:
-            s0, s1 = np.array(s)
-            self.smax = s0, s1
-        except:
-            try:
-                self.smax = [float(s)]
-            except:
-                print("The max strain value:", s, "is not valid")
+    def OptStrain(self, x=True):
+        self.opt_strain = x
+        return self
+
+    def OptAngle(self, x=True):
+        self.opt_angle = x
+        return self
+
+    def UniformStrain(self, smax):
+        self.uni_strain = True
+        self.OptStrain()
+        self.smax = smax
+        return self
+   
+    def Strain(self, smax):
+        self.OptStrain()
+        self.max = smax
+        return self
+
+    def AngleRange(self, angle_range):
+        self.OptAngle()
+        self.angle_range = angle_range
         return None
 
-    def setMinAngle(self, theta_min):
-        self.theta_min = theta_min
-        return None
-
-    def optimizeAngle(self, opt):
-        self.opt_angle = opt
-
-    def optimizeStrain(self, opt):
-        self.opt_strain = opt
-
-    def Result(self):
-        return self.result
-
-    def updatedCell(self):
-        return self.updated_target_cell
-
-    # here you build the exponential like potential
     def costFuncion(self, r, eta=0.001):
         dx, dy = (r - np.floor(r))
         cost = 0
         etac = np.sqrt(2) * eta
-
-        n = int(np.ceil(eta))  # == 1 ???
-        # print("n:", n)
+        n = int(np.ceil(eta))
         for (nx, ny) in np.mgrid[-n:n, -n:n].T.reshape(n ** 2 * 4, 2):
             d2 = (dx + nx) ** 2 + (dy + ny) ** 2
             cost += np.mean(np.exp(- d2 / (2 * etac))) / n ** 2
         return -cost
 
     def fitness(self, x):
-        s1, s2, theta = 0.0, 0.0, 0.0
+        if self.uni_strain:
+            s1 = x[0]
+            s2 = x[0]
+        else:
+            s1, s2 = self.smax
+        
         if (len(x) == 3):
             s1, s2, theta = x
         if (len(x) == 2):
@@ -74,9 +73,9 @@ class LatMatch:
                 s1 = s2 = float(x)
             else:
                 theta = float(x)
-
-        Bsc_points = supercell_points(self.dim, S(s1, s2) @ R(theta) @ self.tar)
-        rBinA = ChangeBasis(Bsc_points, self.ref)
+        self.opt = copy.copy(self.tar).transform2D((s1, s2), theta)
+        SCpoints = self.opt.supercell_points(self.dim)
+        rBinA = ChangeBasis(SCpoints, self.ref.cell)
         return self.costFuncion(rBinA)
 
     def supercellVectors(self, force=False):
@@ -117,8 +116,13 @@ class LatMatch:
         self.result = result
         print("cost after otimization", self.fitness([s1, s2, theta]))
 
-        self.updated_target_cell = S(s1, s2) @ R(theta) @ self.tar
-        return get_supercell_vectors(self.dim, self.updated_target_cell, self.ref)
+        self.opt = copy.copy(self.tar).transform2D((s1, s2), theta)
+        
+        basis = MinimalBasis()
+        if basis is None:
+            return None;
+        
+        return ((s1,s2),theta), MinimalBasis(self.dim, self.updated_target_cell, self.ref)
 
     def supercell(self, force=False):
         L = self.supercellVectors( force=force ).T
