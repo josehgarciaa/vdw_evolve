@@ -10,4 +10,5 @@ vdws = lt.VdWStructure(str1, str2)
 optimizer = lt.LatMatch().OptStrain(False)
 
 # Get the minimal cell
-supercell_params = vdws.get_minimalcell(dims=(10 ,10), optimizer=optimizer)
+supercell_params = vdws.get_minimalcell(dims=(10, 10), optimizer=optimizer)
+print(supercell_params)

@@ -10,7 +10,7 @@ class LatMatch:
     uni_strain = False
     angle_range = (-np.pi / 2, np.pi / 2)
     strain_range = [(-0.05, 0.05), (-0.05, 0.05)]
-    max_dims = (10,10)
+    max_dims = (100,100)
     target = None
     reference = None
     
@@ -69,36 +69,24 @@ class LatMatch:
     
     def fitness(self, x):
         s1, s2, angle = self.unpack_params(x)
-        self.opt = copy.copy(self.target).transform2D((s1, s2), angle)
+        self.opt = copy.copy(self.target).transform2D((s1, s2), angle, transform_atoms=False)
         SCpoints = self.opt.supercell_points(self.max_dims)
         rBinA = ChangeBasis(SCpoints, self.reference.cell)
         return self.costFuncion(rBinA)
 
-    def minimalCell(self, target, reference, max_dims=(10, 10),  force=False):
+    def minimalCell(self, target, reference, max_dims=(100, 100),  force=False):
         self.max_dims = max_dims
         self.target = target
         self.reference = reference
-
         bounds = []
         if self.opt_strain:
             bounds += self.strain_range
         if self.opt_angle:
             bounds += [self.angle_range]
-
-        print("Searching for a minimal cell in the", max_dims, "space")
-        print("cost without otimization", self.fitness([0, 0, 0]))
-        print("optimzie for bounds", bounds)
-#        res = optimize.differential_evolution(self.fitness, bounds, maxiter=1000, popsize=1000, polish=True)
-        res = optimize.differential_evolution(self.fitness, bounds, polish=True)
-
+        res = optimize.differential_evolution(self.fitness, polish=True)
         s1, s2, angle = self.unpack_params(res.x)
-        print("Optimized parameters", s1, s2, angle, "fitness:", self.fitness(res.x))
-        
         self.opt = copy.copy(target).transform2D((s1, s2), angle)
-       
-        #basis = MinimalBasis()
-        #if basis is None:
-        #    return None
-        
-        return None
-        #return ((s1,s2),theta), MinimalBasis(self.max_dims, self.opt, self.ref)
+        basis = MinimalBasis(self.opt.supercell_points(self.max_dims))
+        if basis is None:
+            return None
+        return ( ((s1,s2),angle), basis, self.opt)

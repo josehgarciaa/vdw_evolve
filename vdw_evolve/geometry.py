@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.linalg import norm
 from scipy import optimize
 
 
@@ -73,8 +74,8 @@ def MinimalBasis(vector_list, alpha=0.5, min_area=1e-7):
         areas = areas[areas > min_area]
     
         if len(ws) != 0:
-            norms = np.linalg.norm(ws[:, :2], axis=1)
-            cur_costs = (1-alpha)*areas + alpha*norms
+            norms = norm(ws[:, :2], axis=1)
+            cur_costs = (1-alpha)*areas + alpha*norms*norm(v)
             min_cost = np.min(cur_costs)
             if min_cost < cost:
                 basis = (v, ws[np.argmin(cur_costs)],[0,0,1])

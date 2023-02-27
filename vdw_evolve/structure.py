@@ -36,7 +36,7 @@ class Structure():
         grid = np.mgrid[-nx:nx+1, -ny:ny+1, 0:1].T.reshape((nx*2+1)*(ny*2+1), 3).T
         return (self.cell) @ grid
     
-    def transform2D(self, strain=0, angle=0):
+    def transform2D(self, strain=0, angle=0, transform_atoms=True):
         """
             Attributes
             ----------
@@ -46,6 +46,8 @@ class Structure():
                 When tuple, each value will be apply to an axis
             angle: float, optional
                 The rotation angle along the z direction
+            transform_atoms: boolean, optinal
+                Apply the transformation to the atoms.
         """
         try:
             one = np.eye(2, dtype=float)
@@ -69,7 +71,8 @@ class Structure():
         TrMat = np.eye(3)
         TrMat[:2, :2] = StrMat@RotMat
         self.cell = TrMat@(self.cell)
-        self.atoms = [(s, TrMat@p) for s, p in self.atoms]
+        if transform_atoms:
+            self.atoms = [(s, TrMat@p) for s, p in self.atoms]
         return self
 
     def rotate2D(self, angle, format="deg"):
@@ -209,12 +212,12 @@ class VdWStructure(Structure):
         
         host, comp = self.host, self.complement
         comp_points = self.complement.supercell_points(dims)
-        CinH = ChangeBasis(comp_points,host.cell)
+        CinH = ChangeBasis(comp_points, host.cell)
         return comp_points[:, norm(np.round(CinH) - CinH, axis=0) < tol]
 
     def get_minimalcell(self, dims, optimizer):
         """ """
-        return optimizer.minimalCell(self.complement, self.host)
+        return optimizer.minimalCell(self.complement, self.host, max_dims=dims)
 
 
 
