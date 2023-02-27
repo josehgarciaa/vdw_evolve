@@ -108,13 +108,14 @@ class Structure():
                 _description_
         """
         sc_points = self.supercell_points(dims=(1000, 1000))
-        SCpts = ChangeBasis(sc_points, new_cell)
-        inSC = (np.all(SCpts < 1, axis=0) * np.all(SCpts >= 0, axis=0))
+        XX, YY, ZZ = ChangeBasis(sc_points, new_cell)
+        inSC = (XX >= 0.0)*(XX < 0.999)*(YY >= 0.0)*(YY < 0.999)
+        lat_vecs = np.transpose([XX[inSC], YY[inSC], ZZ[inSC]])
 
-        new_atoms = [] 
-        for lat_vec in inSC:
+        new_atoms = []
+        for lat_vec in lat_vecs:
             for s, p in self.atoms:
-                new_atoms = (s, p+lat_vec)
+                new_atoms += [(s, p+lat_vec)]
         self.atoms = new_atoms
         self.cell = new_cell
         
