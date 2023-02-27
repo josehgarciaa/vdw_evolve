@@ -212,16 +212,9 @@ class VdWStructure(Structure):
         CinH = ChangeBasis(comp_points,host.cell)
         return comp_points[:, norm(np.round(CinH) - CinH, axis=0) < tol]
 
-    def get_minimalcell(self, dims, tol=1e-2, optimize_angle=True, optimize_strain=True):
+    def get_minimalcell(self, dims, optimizer):
         """ """
-        lm = LatMatch(  dims, self.host, self.complement,
-                        optimize_angle =optimize_angle,
-                        optimize_strain =optimize_strain 
-                    )
-        
-        return lm.supercell()
-        
-        return None
+        return optimizer.minimalCell(self.complement, self.host)
 
 
 
