@@ -8,13 +8,14 @@ import matplotlib.pyplot as plt
 
 
 # Read Structure files
-str1 = lt.Structure().read_from("C2_0deg.xyz", format="c2db-xyz")
-str2 = lt.Structure().read_from("C2_30deg.xyz", format="c2db-xyz")
+str1 = lt.Structure().read_from("C2_s0.xyz", format="c2db-xyz")
+str2 = lt.Structure().read_from("C2_s0.1_0.3.xyz", format="c2db-xyz")
 vdws = lt.VdWStructure(str1, str2)
 
 
 # Define the type of optimization
-optimizer = lt.LatMatch().OptStrain(False)
+optimizer = lt.LatMatch().OptAngle(False)
+optimizer.strain_range = ( (-0.5,0.5),(-0.5,0.5) )
 
 # Get the minimal cell
 dims = (10,10)
