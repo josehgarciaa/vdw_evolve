@@ -78,15 +78,18 @@ class LatMatch:
         self.max_dims = max_dims
         self.target = target
         self.reference = reference
+
         bounds = []
         if self.opt_strain:
             bounds += self.strain_range
         if self.opt_angle:
             bounds += [self.angle_range]
-        res = optimize.differential_evolution(self.fitness, polish=True)
+
+        res = optimize.differential_evolution(self.fitness, bounds, maxiter=1000, popsize=1000, polish=True)
         s1, s2, angle = self.unpack_params(res.x)
         self.opt = copy.copy(target).transform2D((s1, s2), angle)
         basis = MinimalBasis(self.opt.supercell_points(self.max_dims))
         if basis is None:
             return None
+        
         return ( ((s1,s2),angle), basis, self.opt)

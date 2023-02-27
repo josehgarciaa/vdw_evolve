@@ -99,6 +99,27 @@ class Structure():
         """
         return self.transform2D(strain=strain)
 
+    def ChangeUnitCell(self, new_cell):
+        """Change the unit cell and modify the atoms
+        
+            Attributes
+            ----------
+            cell : _type_
+                _description_
+        """
+        sc_points = self.supercell_points(dims=(1000, 1000))
+        SCpts = ChangeBasis(sc_points, new_cell)
+        inSC = (np.all(SCpts < 1, axis=0) * np.all(SCpts >= 0, axis=0))
+
+        new_atoms = [] 
+        for lat_vec in inSC:
+            for s, p in self.atoms:
+                new_atoms = (s, p+lat_vec)
+        self.atoms = new_atoms
+        self.cell = new_cell
+        
+        return self        
+
     def read_from(self, input_file, format):
         """
             Attributes
@@ -165,6 +186,9 @@ class Structure():
 
 class VdWStructure(Structure):
 
+    strain = (0, 0)
+    angle = 0
+
     def __init__(self, host, complement, supercell=False):
         """
         Attributes
@@ -216,8 +240,12 @@ class VdWStructure(Structure):
         return comp_points[:, norm(np.round(CinH) - CinH, axis=0) < tol]
 
     def get_minimalcell(self, dims, optimizer):
-        """ """
-        return optimizer.minimalCell(self.complement, self.host, max_dims=dims)
+
+        (strain, angle), cell, opt_str = optimizer.minimalCell(self.complement, self.host, max_dims=dims)
+        opt_vdw = VdWStructure(self.host, opt_str)
+        opt_vdw.strain = strain
+        opt_vdw.angle = angle
+        return cell, opt_vdw
 
 
 
