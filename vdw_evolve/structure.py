@@ -246,7 +246,11 @@ class VdWStructure(Structure):
         opt_vdw = VdWStructure(self.host, opt_str)
         opt_vdw.strain = strain
         opt_vdw.angle = angle
-        return cell, opt_vdw
+        opt_vdw.host.ChangeUnitCell(cell)
+        opt_vdw.complement.ChangeUnitCell(cell)
+        opt_vdw.cell = cell
+        opt_vdw.atoms = [ *opt_vdw.host.atoms, *opt_vdw.complement.atoms]
+        return opt_vdw
 
 
 
