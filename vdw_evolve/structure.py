@@ -3,6 +3,9 @@ from numpy.linalg import norm
 import json
 from .geometry import ChangeBasis
 from .lat_matcher import LatMatch
+from .parser import cell_fromXYZ, atoms_fromXYZ
+from .parser import cell_fromJSON, atoms_fromJSON
+
 class Structure():
     """
     Structural information of a material
@@ -121,33 +124,22 @@ class Structure():
         
         return self        
 
-    def read_from(self, input_file, format):
+    def read_from(self, filepath, format):
         """
             Attributes
             ----------
-            input_file: string  
+            filepath: string  
                 The location of the input file to be read.
             format: string
                 The format of the input file
         """
-        if format == "c2db-xyz":
-            try:
-                # A temporal function to format a line
-                def _format(line):
-                    s, x, y, z = [x for x in line.split(" ") if x != ""][:4]
-                    return (s, np.array([float(x), float(y), float(z)]))
+        if "-xyz" in format:
+            self.cell = cell_fromXYZ(filepath, format)
+            self.atoms = atoms_fromXYZ(filepath, format)
+        if "-json" in format:
+            self.cell = cell_fromJSON(filepath, format)
+            self.atoms = atoms_fromJSON(filepath, format)
 
-                with open(input_file) as f:
-                    npoints = int(f.readline())
-                    lat = f.readline()
-                    lat = lat[lat.find("\"")+1:lat.find("Properties")-2]
-                    lat = lat.split(" ")
-                    lat = np.array(list(map(float, lat))).reshape(3, 3)
-                    xyz = [_format(line) for line in f]
-                    self.cell = np.transpose(lat)
-                    self.atoms = xyz
-            except ValueError:
-                print("Could not properly parse input_file")
         return self
 
     def write_to(self, output_filename, format):

@@ -65,24 +65,131 @@ def extract_structure(uid_list, save_path="STRUCTUREScolection"):
             os.rename(dw_path, file)
 
 
-def get_lattice_from_structure_file(f):
+def cell_fromJSON(filepath, format="c2db-json"):
+    """ Read the cell out of a json file in different formats
+
+    Parameters
+    ----------
+    filepath : str
+        Path to the json file
+    format : str
+        Format of the json file. 
+        Default is c2db-json
+
+    Returns
+    -------
+    array-like
+        The unit cell of structure, with vectors as columns.
+    """
+    if format is "c2db-json":
+        with open(filepath, 'r') as file:
+            json_data = json.load(file)
+        my_type = "__ndarray__"
+        data_struct = json_data['1']["cell"]["array"]
+        if my_type in data_struct:
+            shape = data_struct[my_type][0]
+            d_type = data_struct[my_type][1]
+            lattice = np.array(data_struct[my_type][2], dtype=d_type).reshape(shape)
+        return np.transpose(lattice)
+
+
+def atoms_fromJSON(filepath, format="c2db-json"):
+    """ Read the atoms from a json file in different formats
+
+    Parameters
+    ----------
+    filepath : str
+        Path to the json file
+    format : str
+        Format of the json file. 
+        Default is c2db-json
+
+    Returns
+    -------
+    array-like
+        The unit cell of structure, with vectors as columns.
     """
 
-    :param f: "path/to/the/json/sith/structure"
-    :return:
+    if format is "c2db-json":
+        with open(filepath, 'r') as file:
+            json_data = json.load(file)
+        my_type = "__ndarray__"
+        positions = json_data['1']["positions"]['__ndarray__']
+        positions = np.reshape(np.array(positions[2]), positions[0])
+        type = json_data['1']["numbers"]['__ndarray__']
+        type = np.reshape(np.array(type[2]), type[0])
+        atoms = []
+        for i, atom_n in enumerate(type):
+            atom = [atom_n, [positions[i][0], positions[i][1], positions[i][2]]]
+            atoms.append(atom)
+        return atoms
+
+
+
+def cell_fromXYZ(filepath, format):
+    """ Read the cell from a xyz when allowed
+
+    Parameters
+    ----------
+    filepath : str
+        Path to the xyz file
+    format : str
+        Format of the xyz file. 
+        Default is c2db-xyz
+
+    Returns
+    -------
+    array-like
+        The unit cell of structure, with vectors as columns.
+    or None
+        When the lattice vector cannot be extracted
     """
-    with open(f, 'r') as file:
-        json_data = json.load(file)
-    my_type = "__ndarray__"
-    data_struct = json_data['1']["cell"]["array"]
-    if my_type in data_struct:
-        shape = data_struct[my_type][0]
-        d_type = data_struct[my_type][1]
-        lattice = np.array(data_struct[my_type][2], dtype=d_type).reshape(shape)
-    return lattice
+    if format == "c2db-xyz":
+        with open(filepath) as f:
+            npoints = f.readline()
+            lat = f.readline()
+            lat = lat[lat.find("\"")+1:lat.find("Properties")-2]
+            lat = lat.split(" ")
+        try:
+            cell = np.transpose(np.array(list(map(float, lat))).reshape(3, 3))
+            return cell
+        except ValueError:
+            print("Could not properly parse input_file")
+            return None
 
 
+def atoms_fromXYZ(filepath, format):
+    """ Read the atoms from a xyz when allowed
 
+    Parameters
+    ----------
+    filepath : str
+        Path to the xyz file
+    format : str
+        Format of the xyz file.
+        Default is c2db-xyz
+
+    Returns
+    -------
+    array-like
+        The unit cell of structure, with vectors as columns.
+    or None
+        When the lattice vector cannot be extracted 
+    """
+    if format == "c2db-xyz":
+        def xyz_format(line):
+            s, x, y, z = [x for x in line.split(" ") if x != ""][:4]
+            return (s, np.array([float(x), float(y), float(z)]))
+
+        with open(filepath) as f:
+            npoints = f.readline()
+            lat = f.readline()
+        try:
+            atoms = [xyz_format(line) for line in f]
+            return atoms
+        except ValueError:
+            print("Could not properly parse input_file")
+            return None
 
 
 def get_cell_from_structure_file(f, xyz=False):
@@ -98,7 +205,6 @@ def get_cell_from_structure_file(f, xyz=False):
 
 def get_atoms_from_structure_file(f):
     """
-
     :param f: "path/to/the/json/sith/structure"
     :return:
     """
@@ -110,13 +216,10 @@ def get_atoms_from_structure_file(f):
     positions = np.reshape(np.array(positions[2]), positions[0])
     type = json_data['1']["numbers"]['__ndarray__']
     type = np.reshape(np.array(type[2]), type[0])
-
     atoms = []
     for i, atom_n in enumerate(type):
-        atom = [atom_n,[positions[i][0],positions[i][1],positions[i][2]]]
+        atom = [atom_n, [positions[i][0], positions[i][1], positions[i][2]]]
         atoms.append(atom)
-
-
     return atoms
 
 

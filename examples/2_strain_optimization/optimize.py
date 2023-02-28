@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 
 # Read Structure files
-str1 = lt.Structure().read_from("c2db-PtSe2.json", format="c2db-json")
+str1 = lt.Structure().read_from("C2_s0.xyz", format="c2db-xyz")
 str2 = lt.Structure().read_from("C2_s0.1_0.3.xyz", format="c2db-xyz")
 vdws = lt.VdWStructure(str1, str2)
 
