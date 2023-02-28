@@ -9,7 +9,7 @@ import json
 import ase.db
 import pandas as pd
 import numpy as np
-
+from .physics import num2chem
 
 def get_data_as_pd(path, options, props):
     """
@@ -81,16 +81,19 @@ def cell_fromJSON(filepath, format="c2db-json"):
     array-like
         The unit cell of structure, with vectors as columns.
     """
-    if format is "c2db-json":
+    if format == "c2db-json":
         with open(filepath, 'r') as file:
             json_data = json.load(file)
-        my_type = "__ndarray__"
-        data_struct = json_data['1']["cell"]["array"]
-        if my_type in data_struct:
-            shape = data_struct[my_type][0]
-            d_type = data_struct[my_type][1]
-            lattice = np.array(data_struct[my_type][2], dtype=d_type).reshape(shape)
-        return np.transpose(lattice)
+        arr_type = "__ndarray__"
+        try:
+            data_struct = json_data['1']["cell"][arr_type]
+        except ValueError:
+            print("The array type is not the proper one")
+        shape = data_struct[0]
+        d_type = data_struct[1]
+        lattice = np.array(data_struct[2], dtype=float).reshape(shape)
+        return np.transpose(lattice.reshape(shape))
+    return None
 
 
 def atoms_fromJSON(filepath, format="c2db-json"):
@@ -110,20 +113,27 @@ def atoms_fromJSON(filepath, format="c2db-json"):
         The unit cell of structure, with vectors as columns.
     """
 
-    if format is "c2db-json":
+    if format == "c2db-json":
         with open(filepath, 'r') as file:
             json_data = json.load(file)
-        my_type = "__ndarray__"
-        positions = json_data['1']["positions"]['__ndarray__']
-        positions = np.reshape(np.array(positions[2]), positions[0])
-        type = json_data['1']["numbers"]['__ndarray__']
-        type = np.reshape(np.array(type[2]), type[0])
+        arr_type = "__ndarray__"
+        
+        try:
+            positions = json_data['1']["positions"][arr_type]
+            positions = np.reshape(np.array(positions[2]), positions[0])
+        except ValueError:
+            print("The array type is not the proper one")
+        
+        try:
+            type = json_data['1']["numbers"][arr_type]
+            type = np.reshape(np.array(type[2]), type[0])
+        except ValueError:
+            print("The array type is not the proper one")
         atoms = []
         for i, atom_n in enumerate(type):
-            atom = [atom_n, [positions[i][0], positions[i][1], positions[i][2]]]
+            atom = [num2chem[atom_n], [positions[i][0], positions[i][1], positions[i][2]]]
             atoms.append(atom)
         return atoms
-
 
 
 def cell_fromXYZ(filepath, format):
@@ -150,12 +160,12 @@ def cell_fromXYZ(filepath, format):
             lat = f.readline()
             lat = lat[lat.find("\"")+1:lat.find("Properties")-2]
             lat = lat.split(" ")
-        try:
-            cell = np.transpose(np.array(list(map(float, lat))).reshape(3, 3))
-            return cell
-        except ValueError:
-            print("Could not properly parse input_file")
-            return None
+            try:
+                cell = np.transpose(np.array(list(map(float, lat))).reshape(3, 3))
+                return cell
+            except ValueError:
+                print("Could not properly parse input_file from cells")
+                return None
 
 
 def atoms_fromXYZ(filepath, format):
@@ -184,12 +194,12 @@ def atoms_fromXYZ(filepath, format):
         with open(filepath) as f:
             npoints = f.readline()
             lat = f.readline()
-        try:
-            atoms = [xyz_format(line) for line in f]
-            return atoms
-        except ValueError:
-            print("Could not properly parse input_file")
-            return None
+            try:
+                atoms = [xyz_format(line) for line in f]
+                return atoms
+            except ValueError:
+                print("Could not properly parse input_file from xyz")
+                return None
 
 
 def get_cell_from_structure_file(f, xyz=False):
