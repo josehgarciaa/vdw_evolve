@@ -41,7 +41,8 @@ def base_fit_function(params, cel1, cel2, strain_boundary):
     round_cost = round_cost * cons
 
     # cost for minimizing the new vectors length
-    length_cost = ((t_cel1[0][0] ** 2 + t_cel1[0][1] ** 2) + (t_cel1[1][0] ** 2 + t_cel1[1][1] ** 2)) * 100
+    # ad 1  0,1**n <1
+    length_cost = (1+(t_cel1[0][0] ** 2 + t_cel1[0][1] ** 2) + (t_cel1[1][0] ** 2 + t_cel1[1][1] ** 2)) * 100
 
     f = partial_cost_shape(super_cel_area) + round_cost ** 3 + length_cost * 2
 
@@ -65,3 +66,36 @@ def partial_cost_shape(x, up=99999999):
     else:
         res = (x - 1) ** 2 - up * (1 / (1 + x ** 2)) + 1 / (x + 0.00000000000001)
     return res
+
+
+
+
+###
+
+
+
+def rectangle_fit_function(params, cel1, cel2, strain_boundary):
+    """
+    This creates a cost that the annealing process will minimize.
+    The cost is proportional to the area of the supercell
+    and the length of the new based vectors.
+    :param params: tA parameters
+    :param cel1:
+    :param cel2:
+    :param strain_boundary:
+    :return:
+    """
+    t_cel1, strain_t_cel2 = t_cel1t_cel2(params, cel1, cel2)
+    super_c_1 = np.dot(t_cel1, cel1)
+
+
+
+    # cost for minimizing the new vectors length
+    # thry with this constant 
+    length_cost = (1+(t_cel1[0][0] ** 2 + t_cel1[0][1] ** 2) + (t_cel1[1][0] ** 2 + t_cel1[1][1] ** 2))
+
+    f =  (1+super_c_1[0][1]**2 +super_c_1[1][0]**2)**5*100 + length_cost * 2
+    # print("da")
+
+    # print(f)
+    return f
