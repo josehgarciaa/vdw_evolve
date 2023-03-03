@@ -22,15 +22,19 @@ def cell_fromJSON(filepath, format="c2db-json"):
         with open(filepath, 'r') as file:
             json_data = json.load(file)
         arr_type = "__ndarray__"
-        try:
+        obj_type = "array"
+        if arr_type in json_data['1']["cell"]:
             data_struct = json_data['1']["cell"][arr_type]
+        elif obj_type in json_data['1']["cell"]:
+            data_struct = json_data['1']["cell"][obj_type][arr_type]            
+        try:
+            shape = data_struct[0]
+            d_type = data_struct[1]
+            lattice = np.array(data_struct[2], dtype=float).reshape(shape)
+            return np.transpose(lattice.reshape(shape))
         except ValueError:
             print("The array type is not the proper one")
-        shape = data_struct[0]
-        d_type = data_struct[1]
-        lattice = np.array(data_struct[2], dtype=float).reshape(shape)
-        return np.transpose(lattice.reshape(shape))
-    return None
+            return None
 
 
 def atoms_fromJSON(filepath, format="c2db-json"):
