@@ -39,7 +39,8 @@ class Structure():
         grid = np.mgrid[-nx:nx+1, -ny:ny+1, 0:1].T.reshape((nx*2+1)*(ny*2+1), 3).T
         return (self.cell) @ grid
     
-    def transform2D(self, strain=0, angle=0, transform_atoms=True):
+    def transform2D(self, strain, angle, transform_atoms=True,
+                    angle_format="deg", strain_format="perc"):
         """
             Attributes
             ----------
@@ -53,16 +54,21 @@ class Structure():
                 Apply the transformation to the atoms.
         """
         try:
-            one = np.eye(2, dtype=float)
+            one = np.eye(2).astype(float)
             if isinstance(strain, (int, float)):
                 StrMat = one*strain
             else:
-                StrMat = np.diag(strain)
-            StrMat = one+StrMat/100.0
+                StrMat = np.diag(strain).astype(float)
+                
+            if strain_format == "perc":
+                StrMat = StrMat/100.0
+            StrMat += one
         except ValueError:
             print("Could not properly parse the strain parameters to a  matrix")
             StrMat = None
 
+        if angle_format == "deg":
+            angle = angle*np.pi/180.0
         RotMat = [[np.cos(angle), -np.sin(angle)],
                   [np.sin(angle), np.cos(angle)]]
         try:
@@ -87,11 +93,10 @@ class Structure():
             format: str
                 The angle format, can be either deg (degrees) or rad (radians)
         """
-        if format == "deg":
-            angle = angle*np.pi/180.0
-        return self.transform2D(angle=angle)
+        return self.transform2D(angle=angle, angle_format=format,
+                                strain=0.0)
 
-    def strain2D(self, strain):
+    def strain2D(self, strain, format="perc"):
         """
             Attributes
             ----------
@@ -100,7 +105,8 @@ class Structure():
                 When scalar uniform strain will be applied to all axis
                 When tuple, each value will be apply to an axis
         """
-        return self.transform2D(strain=strain)
+        return self.transform2D(strain=strain, strain_format=format,
+                                angle=0.0)
 
     def ChangeUnitCell(self, new_cell):
         """Change the unit cell and modify the atoms
@@ -121,8 +127,7 @@ class Structure():
                 new_atoms += [(s, p+lat_vec)]
         self.atoms = new_atoms
         self.cell = new_cell
-        
-        return self        
+        return self
 
     def read_from(self, filepath, format):
         """
@@ -179,8 +184,8 @@ class Structure():
 
 class VdWStructure(Structure):
 
-    strain = (0, 0)
-    angle = 0
+    _strain = (0, 0)
+    _angle = 0
 
     def __init__(self, host, complement, supercell=False):
         """
@@ -234,17 +239,42 @@ class VdWStructure(Structure):
 
     def get_minimalcell(self, dims, optimizer):
 
-        (strain, angle), cell, opt_str = optimizer.minimalCell(self.complement, self.host, max_dims=dims)
+        (strain, angle), cell, opt_str = optimizer.minimalCell(self.complement,
+                                                               self.host, max_dims=dims)
         opt_vdw = VdWStructure(self.host, opt_str)
-        opt_vdw.strain = strain
-        opt_vdw.angle = angle
+        opt_vdw._strain = strain
+        opt_vdw._angle = angle
         opt_vdw.host.ChangeUnitCell(cell)
         opt_vdw.complement.ChangeUnitCell(cell)
         opt_vdw.cell = cell
-        opt_vdw.atoms = [ *opt_vdw.host.atoms, *opt_vdw.complement.atoms]
+        opt_vdw.atoms = [*opt_vdw.host.atoms, *opt_vdw.complement.atoms]
         return opt_vdw
 
+    def complement_strain(self, format="perc"):
+        """Return the strain applied to complement to make the vdw cell 
 
+        Attributes
+        ----------
+        format : str, optional
+            The format which can be perc for percentile and abs for absolute, by default "perc"
+        """
+        s1, s2 = self._strain
+        scal = 1.0
+        if format == "perc":
+            scal = 100
+        return (scal*s1, scal*s2)
+    
+    def complement_angle(self, format="deg"):
+        """Return the angle applied to complement to make the vdw cell 
+
+        Attributes
+        ----------
+        format : str, optional
+            The format which can be deg for degrees and rad for radians, by default "deg"
+        """
+        if format == "deg":
+            return self._angle*180/np.pi
+        return self._angle
 
 class SuperCell():
 

@@ -14,12 +14,13 @@ vdws = lt.VdWStructure(str1, str2)
 
 
 # Define the type of optimization
-optimizer = lt.LatMatch().OptStrain(False)
+optimizer = lt.LatMatch().opt_strain(False)
 
 # Get the minimal cell
 dims = (10,10)
 optVdW = vdws.get_minimalcell(dims=dims, optimizer=optimizer)
-print("Strain: ", optVdW.strain, "angle: ",optVdW.angle)
+print("Strain: ", optVdW.complement_strain(),
+      "angle: ", optVdW.complement_angle())
 
 
 plt.axes().set_aspect('equal')

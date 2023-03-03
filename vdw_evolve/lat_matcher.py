@@ -5,44 +5,56 @@ from .geometry import ChangeBasis, MinimalBasis
 import copy
 
 class LatMatch:
-    opt_angle = True
-    opt_strain = True
-    uni_strain = False
-    angle_range = (-np.pi / 2, np.pi / 2)
-    strain_range = [(-0.05, 0.05), (-0.05, 0.05)]
-    max_dims = (100,100)
+
+    _angle_range = (-np.pi/2, np.pi/2)
+    _strain_range = [(-0.05, 0.05), (-0.05, 0.05)]    
+    _opt_angle = True
+    _opt_strain = True
+    _uni_strain = False
+    max_dims = (100, 100)
     target = None
     reference = None
-    
+    cost = None
+
     def __init__(self, optimize_angle=True, optimize_strain=True):
-        self.opt_angle = optimize_angle
-        self.opt_strain = optimize_strain
+        self._opt_angle = optimize_angle
+        self._opt_strain = optimize_strain
 
-    def OptStrain(self, x=True):
-        self.opt_strain = x
+    def opt_strain(self, x=True):
+        self._opt_strain = x
         return self
 
-    def OptAngle(self, x=True):
-        self.opt_angle = x
+    def opt_angle(self, x=True):
+        self._opt_angle = x
         return self
 
-    def UniformStrain(self, smax, smin=None):
-        if smin is None:
-            smin = -smax
-        self.uni_strain = True
-        self.OptStrain()
-        self.strain_range = [(smin, smax)]
+    def uniform_strain(self, abs_maxstrain, format="perc"):
+        self._uni_strain = True
+        self.opt_strain()
+        smax = abs_maxstrain
+        scal = 1.0
+        if format == "perc":
+            scal = 1/100
+        self._strain_range = [(scal*-smax, scal*smax)]
         return self
    
-    def Strain(self, smax):
-        self.OptStrain()
-        self.max = smax
+    def set_max_strain(self, smax, format="perc"):
+        self.opt_strain()
+        s1, s2 = smax
+        scal = 1.0
+        if format == "perc":
+            scal = 1/100
+        self._strain_range = [(-scal*s1, scal*s1), (-scal*s2, scal*s2)]
         return self
 
-    def AngleRange(self, angle_range):
-        self.OptAngle()
-        self.angle_range = angle_range
-        return None
+    def set_angle_range(self, angle_range, format="deg"):
+        self.opt_angle()
+        amin, amax = angle_range
+        scal = 1.0
+        if format == "deg":
+            scal = np.pi/180.
+        self._angle_range = (scal*amin, scal*amax)
+        return self
 
     def costFuncion(self, r, eta=0.001):
         dx, dy, dz = (r - np.floor(r))
@@ -54,42 +66,67 @@ class LatMatch:
             cost += np.mean(np.exp(- d2 / (2 * etac))) / n ** 2
         return -cost
 
+    def strain_range(self, format="perc"):
+        if format == "perc":
+            return self._strain_range*100
+        return self._strain_range
+
+    def angle_range(self, format="deg"):
+        if format == "deg":
+            return self._angle_range*180/np.pi
+        return self._angle_range
+    
     def unpack_params(self, x):
         s1, s2, angle = 0, 0, 0
 
-        if self.opt_strain:
-            if self.uni_strain:
+        if self._opt_strain:
+            if self._uni_strain:
                 s1 = float(x[0])
                 s2 = s1
             else:
                 s1, s2 = float(x[0]), float(x[1])
-        if self.opt_angle:
+        if self._opt_angle:
             angle = float(x[-1])
         return s1, s2, angle
     
     def fitness(self, x):
         s1, s2, angle = self.unpack_params(x)
-        self.opt = copy.copy(self.target).transform2D((s1, s2), angle, transform_atoms=False)
+        self.opt = copy.copy(self.target).transform2D(strain=(s1, s2),
+                                                      strain_format="abs",
+                                                      angle=angle,
+                                                      angle_format="rad",
+                                                      transform_atoms=False)
         SCpoints = self.opt.supercell_points(self.max_dims)
         rBinA = ChangeBasis(SCpoints, self.reference.cell)
         return self.costFuncion(rBinA)
 
-    def minimalCell(self, target, reference, max_dims=(100, 100),  force=False):
+    def minimalCell(self, target, reference,
+                    max_dims=(100, 100),  force=False):
+        
         self.max_dims = max_dims
         self.target = target
         self.reference = reference
 
         bounds = []
-        if self.opt_strain:
-            bounds += self.strain_range
-        if self.opt_angle:
-            bounds += [self.angle_range]
+        if self._opt_strain:
+            bounds += self._strain_range
+        if self._opt_angle:
+            bounds += [self._angle_range]
 
-        res = optimize.differential_evolution(self.fitness, bounds, maxiter=1000, popsize=1000, polish=True)
+        init_cost = self.fitness((0, 0, 0))
+
+        res = optimize.differential_evolution(self.fitness, bounds,
+                                              maxiter=1000, popsize=1000,
+                                              polish=True)
+        self.cost = res.fun
+        print("Initial cost", init_cost, "Final cost", res.fun, "improvement", res.fun/init_cost )
         s1, s2, angle = self.unpack_params(res.x)
-        self.opt = copy.copy(target).transform2D((s1, s2), angle)
+        self.opt = copy.copy(target).transform2D(strain=(s1, s2),
+                                                 strain_format="abs",
+                                                 angle=angle,
+                                                 angle_format="rad")
+        
         basis = MinimalBasis(self.opt.supercell_points(self.max_dims))
         if basis is None:
             return None
-        
-        return ( ((s1,s2),angle), basis, self.opt)
+        return (((s1, s2), angle), basis, self.opt)
