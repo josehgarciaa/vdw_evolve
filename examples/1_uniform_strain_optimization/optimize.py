@@ -8,17 +8,18 @@ import matplotlib.pyplot as plt
 
 # Read Structure files
 str1 = lt.Structure().read_from("c2db-PtSe2.json", format="c2db-json")
-str2 = lt.Structure().read_from("c2db-PtSe2_strained_2.1perc.xyz", format="c2db-xyz")
+str2 = lt.Structure().read_from("c2db-PtSe2_strained_5.0perc.xyz", format="c2db-xyz")
 vdws = lt.VdWStructure(str1, str2)
 
 
 # Define the type of optimization
-optimizer = lt.LatMatch().uniform_strain(5, format="perc").opt_angle(False)
+optimizer = lt.LatMatch().uniform_strain(6, format="perc").opt_angle(False)
 
 # Get the minimal cell
 dims = (10,10)
 optVdW = vdws.get_minimalcell(dims=dims, optimizer=optimizer)
-print("Strain: ", optVdW.strain, "angle: ", optVdW.angle)
+print("Strain: ", optVdW.complement_strain(),
+      "angle: ", optVdW.complement_angle())
 
 
 plt.axes().set_aspect('equal')

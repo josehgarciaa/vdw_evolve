@@ -36,6 +36,8 @@ class LatMatch:
         if format == "perc":
             scal = 1/100
         self._strain_range = [(scal*-smax, scal*smax)]
+        print("strain range", self._strain_range)
+        
         return self
    
     def set_max_strain(self, smax, format="perc"):
@@ -119,13 +121,13 @@ class LatMatch:
                                               maxiter=1000, popsize=1000,
                                               polish=True)
         self.cost = res.fun
-        print("Initial cost", init_cost, "Final cost", res.fun, "improvement", res.fun/init_cost )
+        print("For bounds", bounds, "Initial cost", init_cost, "Final cost", res.fun, "improvement", res.fun/init_cost )
         s1, s2, angle = self.unpack_params(res.x)
         self.opt = copy.copy(target).transform2D(strain=(s1, s2),
                                                  strain_format="abs",
                                                  angle=angle,
                                                  angle_format="rad")
-        
+
         basis = MinimalBasis(self.opt.supercell_points(self.max_dims))
         if basis is None:
             return None

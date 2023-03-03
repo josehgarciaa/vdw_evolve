@@ -212,7 +212,7 @@ class VdWStructure(Structure):
         """
         return None
 
-    def supercell_points(self, dims=(300, 300), tol=1e-3):
+    def supercell_points(self, dims=(300, 300), tol=1e-4):
         """ Lattice points compatible with the host and the compoment
         
         Attributes

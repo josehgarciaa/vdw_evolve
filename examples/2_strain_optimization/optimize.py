@@ -14,14 +14,14 @@ vdws = lt.VdWStructure(str1, str2)
 
 
 # Define the type of optimization
-optimizer = lt.LatMatch().OptAngle(False)
-optimizer.strain_range = ( (-0.5,0.5),(-0.5,0.5) )
+optimizer = lt.LatMatch().opt_angle(False)
+optimizer.set_max_strain((0.5, 0.5))
 
 # Get the minimal cell
 dims = (10,10)
 optVdW = vdws.get_minimalcell(dims=dims, optimizer=optimizer)
-print("Strain: ", optVdW.strain, "angle: ",optVdW.angle)
-
+print("Strain: ", optVdW.complement_strain(),
+      "angle: ", optVdW.complement_angle())
 
 plt.axes().set_aspect('equal')
 plt.scatter(*(optVdW.host.supercell_points( dims )[:2]), s=16.0)
