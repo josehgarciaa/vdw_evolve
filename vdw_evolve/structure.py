@@ -5,6 +5,7 @@ from .geometry import ChangeBasis
 from .lat_matcher import LatMatch
 from .parser import cell_fromXYZ, atoms_fromXYZ
 from .parser import cell_fromJSON, atoms_fromJSON
+from .physics import num2chem
 
 class Structure():
     """
@@ -171,7 +172,73 @@ class Structure():
                     f.write(xyz_out)
             except ValueError:
                 print("Could not properly parse data to the output format")
+
+        if format == "c2db-json":
+            json_cell =self.to_dict()
+            with open(output_filename, "w") as outfile:
+                json.dump(json_cell, outfile, cls=NumpyEncoder)
+
+
+
         return self
+
+    def to_dict(self):
+        """
+            Attributes
+            ----------
+
+            format: dict
+                a dictionary with the proprieties of the class
+        """
+        json_data = {}
+        arr_type = "__ndarray__"
+        obj_type = "array"
+
+        json_data['1'] = {}
+        json_data['1']["cell"] = {}
+        json_data['1']["cell"][obj_type] = {arr_type: []}
+
+        lattice = np.transpose(self.cell)
+        shape = lattice.shape
+        d_type = "float"
+
+        json_data['1']["cell"][obj_type][arr_type].append(shape)  # shape = data_struct[0]
+        json_data['1']["cell"][obj_type][arr_type].append(d_type)  # d_type = data_struct[1]
+        json_data['1']["cell"][obj_type][arr_type].append(lattice.reshape(-1))
+        # lattice = np.array(data_struct[2], dtype=float).reshape(shape)
+        # np.transpose(lattice.reshape(shape))
+
+
+        json_data['1']["positions"] = {arr_type: []}
+
+        shape = (len(self.atoms), 3)
+        json_data['1']["positions"][arr_type].append(shape)
+        json_data['1']["positions"][arr_type].append(d_type)
+        positions = []
+        for atom in self.atoms:
+            positions.append(atom[1][0])
+            positions.append(atom[1][1])
+            positions.append(atom[1][2])
+        json_data['1']["positions"][arr_type].append(positions)
+        # positions = np.reshape(np.array(positions[2]), positions[0])
+
+        json_data['1']["numbers"] = {arr_type: []}
+        shape = (len(self.atoms),)
+        json_data['1']["numbers"][arr_type].append(shape)
+        d_type = "int"
+        json_data['1']["numbers"][arr_type].append(d_type)
+
+        chem2num = {}
+        for key in num2chem:
+            chem2num[num2chem[key]] = key
+
+        atom_n = []
+        for atom in self.atoms:
+            atom_n.append(chem2num[atom[0]])
+        # type = np.reshape(np.array(type[2]), type[0])
+        # atom = [num2chem[atom_n], [positions[i][0], positions[i][1], positions[i][2]]]
+        json_data['1']["numbers"][arr_type].append(atom_n)
+        return json_data
     
     def get_cell(self):
         """
@@ -275,6 +342,27 @@ class VdWStructure(Structure):
         if format == "deg":
             return self._angle*180/np.pi
         return self._angle
+
+    def write_to_json(self, output_filename):
+
+        host_dict = self.host.to_dict()
+        complement_dict = self.complement.to_dict()
+        super_cell_dict = self.to_dict()
+        super_cell_dict['host']=host_dict
+        super_cell_dict['complement']=complement_dict
+        super_cell_dict['complement_strain']=self._strain
+        super_cell_dict['complement_angle']=self._angle
+        with open(output_filename, "w") as outfile:
+            json.dump(super_cell_dict, outfile, cls=NumpyEncoder)
+
+
+
+
+
+
+
+
+
 
 class SuperCell():
 

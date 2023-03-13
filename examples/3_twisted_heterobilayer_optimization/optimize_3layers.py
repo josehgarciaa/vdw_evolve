@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 
 # Read Structure files
-str1 = lt.Structure().read_from("c2db-Fe3GeTe2.json", format="c2db-json")
+str1 = lt.Structure().read_from("c2db-Fe3GeTe2-c2db-Fe3GeTe2_30deg.json", format="c2db-json")
 str2 = lt.Structure().read_from("c2db-Fe3GeTe2_30deg.xyz", format="c2db-xyz")
 vdws = lt.VdWStructure(str1, str2)
 
@@ -22,7 +22,6 @@ optVdW = vdws.get_minimalcell(dims=dims, optimizer=optimizer)
 print("Strain: ", optVdW.complement_strain(),
       "angle: ", optVdW.complement_angle())
 
-optVdW.write_to_json("c2db-Fe3GeTe2-c2db-Fe3GeTe2_30deg.json")
 
 plt.axes().set_aspect('equal')
 plt.scatter(*(optVdW.host.supercell_points(dims)[:2]), s=16.0)
