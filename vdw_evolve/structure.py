@@ -177,9 +177,6 @@ class Structure():
             json_cell =self.to_dict()
             with open(output_filename, "w") as outfile:
                 json.dump(json_cell, outfile, cls=NumpyEncoder)
-
-
-
         return self
 
     def to_dict(self):
@@ -227,11 +224,9 @@ class Structure():
         json_data['1']["numbers"][arr_type].append(shape)
         d_type = "int"
         json_data['1']["numbers"][arr_type].append(d_type)
-
         chem2num = {}
         for key in num2chem:
             chem2num[num2chem[key]] = key
-
         atom_n = []
         for atom in self.atoms:
             atom_n.append(chem2num[atom[0]])
@@ -344,7 +339,12 @@ class VdWStructure(Structure):
         return self._angle
 
     def write_to_json(self, output_filename):
-
+        """
+            Attributes
+            ----------
+            output_file: string
+                        The location of the output file to be written.
+        """
         host_dict = self.host.to_dict()
         complement_dict = self.complement.to_dict()
         super_cell_dict = self.to_dict()
