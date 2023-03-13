@@ -348,10 +348,10 @@ class VdWStructure(Structure):
         host_dict = self.host.to_dict()
         complement_dict = self.complement.to_dict()
         super_cell_dict = self.to_dict()
-        super_cell_dict['host']=host_dict
-        super_cell_dict['complement']=complement_dict
-        super_cell_dict['complement_strain']=self._strain
-        super_cell_dict['complement_angle']=self._angle
+        super_cell_dict['host'] = host_dict
+        super_cell_dict['complement'] = complement_dict
+        super_cell_dict['complement_strain'] = self._strain
+        super_cell_dict['complement_angle'] = self._angle
         with open(output_filename, "w") as outfile:
             json.dump(super_cell_dict, outfile, cls=NumpyEncoder)
 
