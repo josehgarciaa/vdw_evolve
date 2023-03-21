@@ -17,7 +17,7 @@ from .models import Experimentt
 # render the main page:
 def cell_calculator(response):
     form = ExperimentForm()
-    return render(response, "supercellcalculator/supercellcalculator.html", {"form": form})
+    return render(response, "supercellcalculator/supercellcalculator_files.html", {"form": form})
 
 
 # compute the form
@@ -44,7 +44,7 @@ def calculate(response):
             # return the experiment results in a file
             return HttpResponse(json.dumps(exp_results), content_type="application/json")
     form = ExperimentForm()
-    return render(response, "supercellcalculator/supercellcalculator.html", {"form": form})
+    return render(response, "supercellcalculator/supercellcalculator_files.html", {"form": form})
 
 # Examples
 # def index(response):

@@ -1,0 +1,46 @@
+{% extends 'supercell/supercellcalcualtor.html'%}
+
+
+{% block formcontent %}
+
+	<form method="POST" action="/calculate_file" class="form-group"  id="form" enctype="multipart/form-data">
+		{% csrf_token %}
+		<!--{form}}-->
+
+
+
+		<!-- Cell data -->
+		<div class="form-control">
+			<p>Cel1:</p>
+			<p>{{form.file1}}</p>
+
+
+		</div>
+
+		<div class="form-control">
+			<p>Cel2:</p>
+			<p>{{form.file2}}</p>
+
+			</table>
+
+		</div>
+
+		<div class="form-control">
+			<p>Angle:</p>
+			<p>{{form.angle}}</p>
+
+		</div>
+
+		<div class="form-control">
+			<p>Strain:</p>
+			<p>{{form.strain}}</p>
+
+		</div>
+
+		<!-- submission -->
+
+		<button type="submit" value="submit">Submit problem</button>
+
+	</form>
+
+{% endblock %}

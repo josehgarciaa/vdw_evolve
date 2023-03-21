@@ -54,6 +54,7 @@ class Structure():
             transform_atoms: boolean, optinal
                 Apply the transformation to the atoms.
         """
+
         try:
             one = np.eye(2).astype(float)
             if isinstance(strain, (int, float)):
