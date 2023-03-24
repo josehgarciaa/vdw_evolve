@@ -73,12 +73,12 @@ def calculate_file(response):
             max_strain = float(form.cleaned_data["strain"])
 
             super_cell, name = file_solver(file1_path, file2_path, max_angle, max_strain)
-            json_cell = str(settings.MEDIA_ROOT) + "/SuperCells" + name + ".json"
-            # super_cell.write_to_json(json_cell)
+            json_cell = str(settings.MEDIA_ROOT) + "/SuperCells/" + name + ".json"
+            super_cell.write_to_json(json_cell)
             xyz_cell = str(settings.MEDIA_ROOT) + "/SuperCells/" + name + ".xyz"
             super_cell.write_to(xyz_cell, format="c2db-xyz")
 
-            d_file = FileResponse(open(xyz_cell, 'rb'))
+            d_file = FileResponse(open(json_cell, 'rb'))
 
             ip = get_client_ip(response)
 

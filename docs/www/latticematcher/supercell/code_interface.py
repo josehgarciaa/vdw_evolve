@@ -44,7 +44,7 @@ def file_solver(file1, file2, max_angle, max_strain):
     if max_strain == 0:
         optimizer = lt.LatMatch().opt_strain(False)
     elif max_angle != 0:
-        optimizer = lt.LatMatch().uniform_strain(max_strain, "perc")
+        optimizer = lt.LatMatch().set_angle_range((-max_angle, max_angle), "deg").uniform_strain(max_strain, "perc")
 
     # Get the minimal cell
     dims = (50, 50)
