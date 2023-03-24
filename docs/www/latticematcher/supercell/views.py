@@ -1,5 +1,5 @@
 import os
-
+import numpy as np 
 from django.shortcuts import render
 from django.http import HttpResponse, FileResponse
 from django.core.files.storage import default_storage
@@ -56,7 +56,7 @@ def calculate_basic(response):
             # return basic_calcualtor(response)
             #return render(response, 'supercell/supercellcalculator.html', {"form": form})
 #render(response, 'supercell/supercellcalculator.html', {"form": form,"angle":best_angle,"strain":best_strain})
-    
+
     return basic_calcualtor(response)
 def calculate_file(response):
     if response.method == "POST":
@@ -114,7 +114,7 @@ def get_client_ip(request):
 def store_directory(ip,max_angle, max_strain):
     now = datetime.now()
     date_time_str = now.strftime("%Y-%m-%d-%H-%M-%S")
-    path=str(settings.MEDIA_ROOT)+"/{}_{}_{}_{}".format(ip, date_time_str, max_angle, max_strain)
+    path=str(settings.MEDIA_ROOT)+"/{}_{}_{}_{}_{}".format(ip, date_time_str, max_angle, max_strain, np.random.randint(0,9))
     os.mkdir(path)
     os.mkdir(path+"/SuperCells")
     return path
